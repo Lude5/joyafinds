@@ -12,17 +12,17 @@
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg: #0c0c10;
-            --surface: #14141a;
-            --border: #1e1e28;
-            --text: #f0f0f0;
-            --text-secondary: #9a9ab0;
-            --text-muted: #55556a;
+            --bg: #fafafa;
+            --surface: #ffffff;
+            --border: #e8e8ec;
+            --text: #1a1a2e;
+            --text-secondary: #5a5a72;
+            --text-muted: #9a9ab0;
             --accent: #f59e0b;
-            --accent-light: #fbbf24;
+            --accent-light: #d97706;
             --accent-dim: rgba(245, 158, 11, 0.08);
-            --accent-glow: rgba(245, 158, 11, 0.2);
-            --accent-soft: rgba(245, 158, 11, 0.12);
+            --accent-glow: rgba(245, 158, 11, 0.15);
+            --accent-soft: rgba(245, 158, 11, 0.1);
             --accent-shadow: #c77d09;
             --bubble: 20px;
             --bubble-lg: 28px;
@@ -42,7 +42,7 @@
 
         body::after {
             content: ''; position: fixed; inset: 0; z-index: 9998;
-            pointer-events: none; opacity: 0.022;
+            pointer-events: none; opacity: 0.012;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
         }
 
@@ -67,10 +67,11 @@
             position: fixed; top: 12px; left: 16px; right: 16px; z-index: 100;
             display: flex; align-items: center; justify-content: space-between;
             padding: 14px 24px; transition: all 0.4s;
-            background: rgba(20,20,26,0.85); backdrop-filter: blur(20px);
+            background: rgba(255,255,255,0.88); backdrop-filter: blur(20px);
             border-radius: var(--bubble-lg); border: 1px solid var(--border);
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
         }
-        .nav.scrolled { background: rgba(12,12,16,0.95); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .nav.scrolled { background: rgba(255,255,255,0.95); box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
         .nav-brand { font-family: var(--font-display); font-size: 20px; font-weight: 900; }
         .nav-brand .accent { color: var(--accent); }
         .nav-links { display: flex; gap: 6px; list-style: none; }
@@ -85,7 +86,7 @@
             color: var(--text); font-size: 20px; cursor: pointer;
         }
         .mobile-menu {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98);
+            display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.98);
             z-index: 200; flex-direction: column; align-items: center;
             justify-content: center; gap: 24px;
         }
@@ -95,7 +96,7 @@
             letter-spacing: 4px; text-transform: uppercase;
             color: var(--text-secondary); transition: color 0.3s;
         }
-        .mobile-menu a:hover { color: var(--accent-light); }
+        .mobile-menu a:hover { color: var(--accent); }
         .mobile-close {
             position: absolute; top: 24px; right: 40px; background: none;
             border: none; color: var(--text); font-size: 24px; cursor: pointer;
@@ -109,13 +110,14 @@
             position: relative; border-radius: var(--bubble);
         }
         .btn-primary {
-            background: var(--accent); color: #000;
+            background: var(--accent); color: #fff;
             box-shadow: 0 4px 0 var(--accent-shadow), 0 6px 20px var(--accent-dim);
         }
         .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 7px 0 var(--accent-shadow), 0 12px 32px var(--accent-glow); }
         .btn-primary:active { transform: translateY(1px); box-shadow: 0 2px 0 var(--accent-shadow); }
         .btn-outline {
             background: var(--surface); color: var(--text); border: 2px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
         .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-3px); }
 
@@ -133,10 +135,11 @@
         .product-item:hover .product-glow { opacity: 1; }
         .product-image-wrap {
             overflow: hidden; margin-bottom: 14px; position: relative;
-            background: var(--surface); border-radius: var(--bubble-lg);
-            border: 2px solid var(--border); transition: border-color 0.3s;
+            background: #f0f0f4; border-radius: var(--bubble-lg);
+            border: 2px solid var(--border); transition: all 0.3s;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
         }
-        .product-item:hover .product-image-wrap { border-color: var(--accent-light); box-shadow: 0 8px 24px var(--accent-dim); }
+        .product-item:hover .product-image-wrap { border-color: var(--accent); box-shadow: 0 8px 24px var(--accent-dim); }
         .product-image {
             width: 100%; aspect-ratio: 1; object-fit: cover;
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -148,12 +151,12 @@
         }
         .product-buy-overlay {
             position: absolute; bottom: 0; left: 0; right: 0;
-            padding: 16px; background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 16px; background: linear-gradient(transparent, rgba(0,0,0,0.6));
             opacity: 0; transition: opacity 0.3s; display: flex; justify-content: center;
         }
         .product-item:hover .product-buy-overlay { opacity: 1; }
         .product-buy-btn {
-            padding: 10px 24px; background: var(--accent); color: #000;
+            padding: 10px 24px; background: var(--accent); color: #fff;
             font-family: var(--font-display); font-size: 12px; font-weight: 800;
             border: none; cursor: pointer;
             transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -193,9 +196,9 @@
         .trust-item { text-align: center; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
         .trust-item strong { display: block; font-size: 14px; color: var(--text-secondary); margin-bottom: 4px; letter-spacing: 0; text-transform: none; }
 
-        .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(16px); z-index: 500; align-items: center; justify-content: center; padding: 20px; }
+        .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(16px); z-index: 500; align-items: center; justify-content: center; padding: 20px; }
         .popup-overlay.active { display: flex; }
-        .popup { background: var(--surface); border: 2px solid var(--border); border-radius: var(--bubble-lg); max-width: 400px; width: 100%; text-align: center; position: relative; padding: 48px 36px; animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
+        .popup { background: var(--surface); border: 2px solid var(--border); border-radius: var(--bubble-lg); max-width: 400px; width: 100%; text-align: center; position: relative; padding: 48px 36px; animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 24px 64px rgba(0,0,0,0.15); }
         @keyframes popIn { from { opacity:0; transform:scale(0.95) translateY(16px); } to { opacity:1; transform:scale(1) translateY(0); } }
         .popup-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; transition: color 0.2s; }
         .popup-close:hover { color: var(--text); }
@@ -215,11 +218,11 @@
         .footer-col a:hover { color: var(--accent-light); }
         .footer-bottom { text-align: center; padding-top: 24px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-muted); letter-spacing: 1px; }
 
-        .cookie-bar { display: none; position: fixed; bottom: 16px; left: 16px; right: 16px; background: rgba(6,6,6,0.95); backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: 16px; padding: 16px 24px; z-index: 400; align-items: center; justify-content: space-between; gap: 16px; }
+        .cookie-bar { display: none; position: fixed; bottom: 16px; left: 16px; right: 16px; background: rgba(255,255,255,0.95); backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: 16px; padding: 16px 24px; z-index: 400; align-items: center; justify-content: space-between; gap: 16px; }
         .cookie-bar.active { display: flex; }
         .cookie-bar p { font-size: 12px; color: var(--text-secondary); }
 
-        .sales-notif { display: none; position: fixed; bottom: 24px; left: 24px; z-index: 300; background: var(--surface); backdrop-filter: blur(16px); border: 2px solid var(--border); border-radius: var(--bubble); padding: 14px 16px; max-width: 300px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); cursor: pointer; transition: border-color 0.2s; }
+        .sales-notif { display: none; position: fixed; bottom: 24px; left: 24px; z-index: 300; background: var(--surface); backdrop-filter: blur(16px); border: 2px solid var(--border); border-radius: var(--bubble); padding: 14px 16px; max-width: 300px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); cursor: pointer; transition: border-color 0.2s; }
         .sales-notif:hover { border-color: var(--accent); }
         .sales-notif.active { display: flex; gap: 12px; align-items: center; animation: slideIn 0.4s cubic-bezier(0.16,1,0.3,1); }
         .sn-img { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; background: var(--border); flex-shrink: 0; }
