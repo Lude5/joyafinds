@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% block title %}JoyaFinds — Your Source for the Best Finds{% endblock %}
+
+{% block extra_css %}
+.hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.hero-blob { position: absolute; border-radius: 50%; filter: blur(100px); pointer-events: none; will-change: transform; }
+.blob-1 { width: 600px; height: 600px; top: -15%; right: -10%; background: radial-gradient(circle, rgba(245,158,11,0.12), transparent 70%); animation: blobDrift1 18s ease-in-out infinite; }
+.blob-2 { width: 500px; height: 500px; bottom: -10%; left: -10%; background: radial-gradient(circle, rgba(245,158,11,0.08), transparent 70%); animation: blobDrift2 22s ease-in-out infinite; }
+.blob-3 { width: 400px; height: 400px; top: 40%; left: 30%; background: radial-gradient(circle, rgba(232,232,232,0.02), transparent 70%); animation: blobDrift3 15s ease-in-out infinite; }
+@keyframes blobDrift1 { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(-60px, 40px) scale(1.1); } 66% { transform: translate(30px, -50px) scale(0.95); } }
+@keyframes blobDrift2 { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(50px, -30px) scale(1.05); } 66% { transform: translate(-40px, 60px) scale(1.1); } }
+@keyframes blobDrift3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(40px, -40px) scale(1.15); } }
+
+.hero-grid { position: absolute; inset: 0; pointer-events: none; opacity: 0.03; background-image: linear-gradient(rgba(232,232,232,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(232,232,232,0.3) 1px, transparent 1px); background-size: 80px 80px; }
+
+.hero-content { position: relative; z-index: 2; text-align: center; padding: 0 40px; max-width: 800px; }
+.hero-label { font-size: 10px; letter-spacing: 6px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 32px; animation: fadeUp 0.6s ease 0.3s both; }
+.hero-title { font-family: var(--font-display); font-size: clamp(48px, 8vw, 88px); font-weight: 900; line-height: 1.05; margin-bottom: 24px; animation: fadeUp 0.6s ease 0.4s both; }
+.hero-title .thin { font-weight: 700; color: var(--accent); }
+.hero-sub { font-size: 16px; color: var(--text-secondary); line-height: 1.7; max-width: 480px; margin: 0 auto 40px; animation: fadeUp 0.6s ease 0.5s both; }
+.hero-cta { display: flex; gap: 16px; justify-content: center; animation: fadeUp 0.6s ease 0.6s both; }
+.hero-scroll { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); font-size: 10px; letter-spacing: 4px; color: var(--text-muted); animation: float 3s ease-in-out infinite; }
+@keyframes float { 0%,100% { transform:translateX(-50%) translateY(0); } 50% { transform:translateX(-50%) translateY(8px); } }
+
+.marquee-wrap { padding: 0; }
+
+.conveyor-section { padding: 60px 0; }
+.conveyor-wrap { overflow: hidden; position: relative; }
+.conveyor-track { display: flex; gap: 24px; width: max-content; cursor: grab; user-select: none; }
+.conveyor-track:active { cursor: grabbing; }
+.conveyor-fade-l, .conveyor-fade-r { position: absolute; top: 0; bottom: 0; width: 120px; z-index: 5; pointer-events: none; }
+.conveyor-fade-l { left: 0; background: linear-gradient(90deg, var(--bg), transparent); }
+.conveyor-fade-r { right: 0; background: linear-gradient(-90deg, var(--bg), transparent); }
+.conv-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 10; width: 48px; height: 48px; border-radius: 16px; background: var(--surface); border: 2px solid var(--border); color: var(--text); font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.conv-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); transform: translateY(-50%) scale(1.1); }
+.conv-btn-l { left: 16px; }
+.conv-btn-r { right: 16px; }
+.conveyor-track .product-item { flex: 0 0 240px; }
+
+.cat-header { padding: 60px 40px 40px; max-width: 1300px; margin: 0 auto; }
+.cat-label { font-family: var(--font-display); font-size: clamp(32px, 5vw, 52px); font-weight: 900; color: var(--text); }
+.cat-label .num { font-size: 13px; font-weight: 800; color: var(--accent); vertical-align: super; margin-right: 8px; background: var(--accent-soft); padding: 2px 8px; border-radius: 8px; }
+.cat-view { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); transition: color 0.2s; margin-top: 8px; display: inline-block; }
+.cat-view:hover { color: var(--accent-light); }
+
+@media (max-width: 768px) {
+    .hero-title { letter-spacing: -1px; }
+    .hero-cta { flex-direction: column; align-items: center; }
+    .cat-header { padding: 40px 20px 24px; }
+    .conveyor-track .product-item { flex: 0 0 180px; }
+    .conv-btn { width: 36px; height: 36px; font-size: 14px; }
+    .conv-btn-l { left: 8px; }
+    .conv-btn-r { right: 8px; }
+    .product-grid { gap: 24px; }
+}
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-blob blob-1"></div>
+    <div class="hero-blob blob-2"></div>
+    <div class="hero-blob blob-3"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+        <p class="hero-label">Curated for you</p>
+        <h1 class="hero-title">The Best<br><span class="thin">JoyaBuy Finds</span></h1>
+        <p class="hero-sub">Handpicked products at the best prices. Updated daily.</p>
+        <div class="hero-cta">
+            <a href="/shop" class="btn btn-primary">Shop Collection</a>
+            <a href="/shop" class="btn btn-outline">Browse Categories</a>
+        </div>
+    </div>
+    <div class="hero-scroll">Scroll</div>
+</section>
+
+<div class="marquee-wrap reveal">
+    <div class="marquee">
+        <div class="marquee-inner">
+            <span class="accent">Curated</span><span>Daily Drops</span><span class="accent">JoyaFinds</span><span>Budget Luxury</span><span class="accent">Best Prices</span><span>Trusted Sellers</span>
+            <span class="accent">Curated</span><span>Daily Drops</span><span class="accent">JoyaFinds</span><span>Budget Luxury</span><span class="accent">Best Prices</span><span>Trusted Sellers</span>
+        </div>
+    </div>
+</div>
+
+<div class="section reveal" style="padding-top:48px;padding-bottom:0;">
+    <div class="trust-row">
+        <div class="trust-item"><strong>Curated</strong>Handpicked Products</div>
+        <div class="trust-item"><strong>Daily</strong>New Drops</div>
+        <div class="trust-item"><strong>Verified</strong>Trusted Sellers</div>
+        <div class="trust-item"><strong>Best</strong>Prices Guaranteed</div>
+    </div>
+</div>
+
+{% if products %}
+<div class="conveyor-section reveal">
+    <div class="section" style="padding-bottom:24px;">
+        <p class="section-label">Fresh Drops</p>
+        <h2 class="section-title" style="font-size:28px;">Newest Finds</h2>
+    </div>
+    <div class="conveyor-wrap">
+        <div class="conveyor-fade-l"></div>
+        <div class="conveyor-fade-r"></div>
+        <button class="conv-btn conv-btn-l" onclick="scrollConv(-1)" aria-label="Scroll left">&#8249;</button>
+        <button class="conv-btn conv-btn-r" onclick="scrollConv(1)" aria-label="Scroll right">&#8250;</button>
+        <div class="conveyor-track" id="conv">
+            {% for p in conveyor %}
+            <a href="/go/{{ p.id }}" target="_blank" rel="noopener" class="product-item" onclick="trackClick('affiliate','buy','{{ p.id }}','{{ p.category }}','{{ p.name }}')">
+                <div class="product-image-wrap">
+                    <div class="product-glow"></div>
+                    <img class="product-image" src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" referrerpolicy="no-referrer">
+                    <div class="product-buy-overlay">
+                        <span class="product-buy-btn">Buy on JoyaBuy</span>
+                    </div>
+                </div>
+                <div class="product-name">{{ p.name }}</div>
+                <div class="product-price">${{ p.price }}</div>
+            </a>
+            {% endfor %}
+            {% for p in conveyor %}
+            <a href="/go/{{ p.id }}" target="_blank" rel="noopener" class="product-item">
+                <div class="product-image-wrap">
+                    <img class="product-image" src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" referrerpolicy="no-referrer">
+                </div>
+                <div class="product-name">{{ p.name }}</div>
+                <div class="product-price">${{ p.price }}</div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% set cats = [
+    ('trending', 'Trending', '01'),
+    ('shoes', 'Shoes', '02'),
+    ('hoodies', 'Hoodies', '03'),
+    ('shirts', 'Shirts', '04'),
+    ('pants', 'Pants', '05'),
+    ('jackets', 'Jackets', '06'),
+    ('accessories', 'Accessories', '07'),
+    ('bags', 'Bags', '08'),
+    ('tech', 'Tech', '09'),
+    ('womens', 'Womens', '10'),
+] %}
+
+{% for slug, name, num in cats %}
+{% set cp = products|selectattr('category', 'equalto', slug)|list %}
+{% if cp %}
+<div class="cat-header reveal">
+    <h2 class="cat-label"><span class="num">{{ num }}</span>{{ name }}</h2>
+    <a href="/shop?category={{ slug }}" class="cat-view">View All &rarr;</a>
+</div>
+<div class="section reveal" style="padding-top:0;">
+    <div class="product-grid">
+        {% for p in cp[:4] %}
+        <a href="/go/{{ p.id }}" target="_blank" rel="noopener" class="product-item reveal reveal-d{{ loop.index0 }}" onclick="trackClick('affiliate','buy','{{ p.id }}','{{ p.category }}','{{ p.name }}')">
+            <div class="product-image-wrap">
+                <div class="product-glow"></div>
+                <img class="product-image" src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" referrerpolicy="no-referrer">
+                <div class="product-buy-overlay">
+                    <span class="product-buy-btn">Buy on JoyaBuy</span>
+                </div>
+            </div>
+            <div class="product-name">{{ p.name }}</div>
+            {% if p.seller %}<div class="product-brand">{{ p.seller }}</div>{% endif %}
+            <div class="product-price">${{ p.price }}</div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+
+<div class="stat-row reveal">
+    <div class="stat">
+        <div class="stat-num" data-count="1000" data-suffix="+">0</div>
+        <div class="stat-label">Products</div>
+    </div>
+    <div class="stat">
+        <div class="stat-num" data-count="10">0</div>
+        <div class="stat-label">Categories</div>
+    </div>
+    <div class="stat">
+        <div class="stat-num" data-count="100" data-suffix="%">0</div>
+        <div class="stat-label">Verified</div>
+    </div>
+</div>
+
+<section class="cta-section reveal">
+    <div class="cta-glow"></div>
+    <p class="section-label" style="position:relative;">Start Shopping</p>
+    <h2>Join JoyaBuy</h2>
+    <p>Sign up and get exclusive deals, coupons, and the lowest shipping rates. Trusted by thousands.</p>
+    <a href="#" class="btn btn-primary" style="position:relative;" onclick="trackClick('signup','cta','','')">Sign Up to JoyaBuy</a>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+var convEl = document.getElementById('conv');
+initConveyor(convEl);
+function scrollConv(dir) {
+    if (!convEl || !convEl._convPos) return;
+    var h = convEl.scrollWidth / 2;
+    var target = convEl._convPos.p + dir * 260 * 3;
+    if (target < 0) target += h;
+    if (target >= h) target -= h;
+    convEl._convPos.target = target;
+}
+{% endblock %}

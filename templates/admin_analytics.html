@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Analytics</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0a0a0b; color: #f0f0f0; }
+        .admin-nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 24px; border-bottom: 1px solid #2a2a2e; background: #141416;
+        }
+        .admin-nav h1 { font-size: 16px; letter-spacing: 2px; text-transform: uppercase; }
+        .admin-nav a { color: #8a8a8e; font-size: 13px; text-decoration: none; margin-left: 20px; }
+        .admin-nav a:hover { color: #0d6b3a; }
+        .admin-content { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        .stat-card { background: #141416; border: 1px solid #2a2a2e; border-radius: 12px; padding: 24px; }
+        .stat-label { font-size: 12px; color: #8a8a8e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .stat-value { font-size: 32px; font-weight: 700; }
+        .stat-accent { color: #0d6b3a; }
+        .panel { background: #141416; border: 1px solid #2a2a2e; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+        .panel h2 { font-size: 16px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; font-size: 11px; color: #8a8a8e; text-transform: uppercase; letter-spacing: 1px; padding: 8px 12px; border-bottom: 1px solid #2a2a2e; }
+        td { padding: 10px 12px; font-size: 14px; border-bottom: 1px solid #1e1e22; }
+        .bar { height: 8px; background: #0d6b3a; border-radius: 4px; }
+        .bar-bg { height: 8px; background: #1e1e22; border-radius: 4px; width: 120px; overflow: hidden; }
+        .chart-container { height: 200px; display: flex; align-items: flex-end; gap: 4px; padding: 16px 0; }
+        .chart-bar {
+            flex: 1; background: #0d6b3a; border-radius: 4px 4px 0 0; min-width: 8px;
+            position: relative; transition: all 0.2s;
+        }
+        .chart-bar:hover { opacity: 0.8; }
+        .chart-bar .tooltip {
+            display: none; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+            background: #1e1e22; padding: 4px 8px; border-radius: 4px; font-size: 11px; white-space: nowrap;
+            margin-bottom: 4px;
+        }
+        .chart-bar:hover .tooltip { display: block; }
+        .period-btns { display: flex; gap: 8px; margin-bottom: 24px; }
+        .period-btn {
+            padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;
+            cursor: pointer; border: 1px solid #2a2a2e; background: transparent; color: #8a8a8e;
+            text-decoration: none;
+        }
+        .period-btn.active, .period-btn:hover { background: rgba(94,234,159,0.15); border-color: #0d6b3a; color: #0d6b3a; }
+    </style>
+</head>
+<body>
+    <nav class="admin-nav">
+        <h1>Analytics</h1>
+        <div>
+            <a href="/admin">Dashboard</a>
+            <a href="/admin/products">Products</a>
+            <a href="/" target="_blank">View Site</a>
+            <a href="/admin/logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="admin-content">
+        <div class="period-btns">
+            <a href="/admin/analytics?days=7" class="period-btn {% if days == 7 %}active{% endif %}">7 Days</a>
+            <a href="/admin/analytics?days=30" class="period-btn {% if days == 30 %}active{% endif %}">30 Days</a>
+            <a href="/admin/analytics?days=90" class="period-btn {% if days == 90 %}active{% endif %}">90 Days</a>
+        </div>
+
+        <div class="stat-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Clicks</div>
+                <div class="stat-value stat-accent">{{ stats.total_clicks }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Unique Visitors</div>
+                <div class="stat-value">{{ stats.unique_visitors }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Signup Clicks</div>
+                <div class="stat-value stat-accent">{{ stats.signup_clicks }}</div>
+            </div>
+        </div>
+
+        <!-- Daily Chart -->
+        <div class="panel">
+            <h2>Daily Clicks</h2>
+            <div class="chart-container">
+                {% set max_clicks = stats.daily|map(attribute='clicks')|max if stats.daily else 1 %}
+                {% for day in stats.daily %}
+                <div class="chart-bar" style="height: {{ (day.clicks / max_clicks * 100)|int }}%;">
+                    <div class="tooltip">{{ day.day }}: {{ day.clicks }} clicks, {{ day.visitors }} visitors</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Top Pages -->
+        <div class="panel">
+            <h2>Top Pages</h2>
+            <table>
+                <tr><th>Page</th><th>Views</th><th></th></tr>
+                {% for p in stats.top_pages %}
+                <tr>
+                    <td>{{ p.page }}</td>
+                    <td>{{ p.views }}</td>
+                    <td>
+                        <div class="bar-bg">
+                            <div class="bar" style="width:{{ (p.views / stats.top_pages[0].views * 100)|int if stats.top_pages else 0 }}%"></div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!-- Top Products -->
+        <div class="panel">
+            <h2>Top Products</h2>
+            <table>
+                <tr><th>Product</th><th>Clicks</th><th></th></tr>
+                {% for p in stats.top_products %}
+                <tr>
+                    <td>{{ p.product_name }}</td>
+                    <td>{{ p.clicks }}</td>
+                    <td>
+                        <div class="bar-bg">
+                            <div class="bar" style="width:{{ (p.clicks / stats.top_products[0].clicks * 100)|int if stats.top_products else 0 }}%"></div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!-- Top Categories -->
+        <div class="panel">
+            <h2>Top Categories</h2>
+            <table>
+                <tr><th>Category</th><th>Clicks</th><th></th></tr>
+                {% for c in stats.top_categories %}
+                <tr>
+                    <td>{{ c.category }}</td>
+                    <td>{{ c.clicks }}</td>
+                    <td>
+                        <div class="bar-bg">
+                            <div class="bar" style="width:{{ (c.clicks / stats.top_categories[0].clicks * 100)|int if stats.top_categories else 0 }}%"></div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!-- Click Types -->
+        <div class="panel">
+            <h2>Interaction Types</h2>
+            <table>
+                <tr><th>Type</th><th>Count</th></tr>
+                {% for e in stats.element_types %}
+                <tr><td>{{ e.element_type }}</td><td>{{ e.clicks }}</td></tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</body>
+</html>

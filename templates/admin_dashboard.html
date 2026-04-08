@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin — kakobuy.locker</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'DM Sans',sans-serif;background:#0a0a0a;color:#f0f0f0}.top{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid #1a1a1a;background:#111}h1{font-size:16px;font-weight:700}.top a{color:#666;font-size:13px;margin-left:16px;text-decoration:none}.top a:hover{color:#22c55e}.wrap{max-width:1000px;margin:0 auto;padding:24px}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:24px}.stat{background:#111;border:1px solid #1a1a1a;border-radius:12px;padding:20px}.stat-label{font-size:12px;color:#999;text-transform:uppercase;margin-bottom:4px}.stat-val{font-size:28px;font-weight:700;color:#22c55e}.panel{background:#111;border:1px solid #1a1a1a;border-radius:12px;padding:20px;margin-bottom:16px}.panel h2{font-size:14px;font-weight:700;margin-bottom:12px}table{width:100%;border-collapse:collapse}th{text-align:left;font-size:11px;color:#999;padding:8px;border-bottom:1px solid #1a1a1a}td{padding:8px;font-size:13px;border-bottom:1px solid #f0f0ec}.thumb{width:36px;height:36px;border-radius:6px;object-fit:cover}.del{background:#e63946;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:600}</style></head>
+<body>
+<div class="top"><h1>kakobuy.locker — Admin</h1><div><a href="/admin/products">Products</a><a href="/admin/analytics">Analytics</a><a href="/admin/backup/download">Backup</a><a href="/" target="_blank">View Site</a><a href="/admin/logout">Logout</a></div></div>
+<div class="wrap">
+<div class="stats">
+<div class="stat"><div class="stat-label">Clicks (30d)</div><div class="stat-val">{{ stats.total_clicks }}</div></div>
+<div class="stat"><div class="stat-label">Visitors</div><div class="stat-val">{{ stats.unique_visitors }}</div></div>
+<div class="stat"><div class="stat-label">Products</div><div class="stat-val">{{ products|length }}</div></div>
+</div>
+<div class="panel"><h2>Products</h2>
+<table><tr><th></th><th>Name</th><th>Category</th><th>Price</th><th></th></tr>
+{% for p in products %}
+<tr><td><img class="thumb" src="{{ p.image }}" onerror="this.style.display='none'"></td><td>{{ p.name }}</td><td>{{ p.category }}</td><td>${{ p.price }}</td><td><button class="del" onclick="if(confirm('Delete?'))fetch('/admin/products/delete/{{ p.id }}',{method:'DELETE'}).then(()=>location.reload())">Del</button></td></tr>
+{% endfor %}
+</table></div>
+</div>
+</body></html>

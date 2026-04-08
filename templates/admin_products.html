@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Products</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0a0a0b; color: #f0f0f0; }
+        .admin-nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 24px; border-bottom: 1px solid #2a2a2e; background: #141416;
+        }
+        .admin-nav h1 { font-size: 16px; letter-spacing: 2px; text-transform: uppercase; }
+        .admin-nav a { color: #8a8a8e; font-size: 13px; text-decoration: none; margin-left: 20px; }
+        .admin-nav a:hover { color: #e63946; }
+        .admin-content { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+        .panel {
+            background: #141416; border: 1px solid #2a2a2e; border-radius: 12px; padding: 24px; margin-bottom: 24px;
+        }
+        .panel h2 { font-size: 16px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-full { grid-column: 1 / -1; }
+        label { display: block; font-size: 11px; color: #8a8a8e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        input, select, textarea {
+            width: 100%; padding: 12px; background: #1e1e22; border: 1px solid #2a2a2e;
+            border-radius: 8px; color: #f0f0f0; font-size: 14px; outline: none;
+        }
+        input:focus, select:focus, textarea:focus { border-color: #e63946; }
+        textarea { resize: vertical; min-height: 80px; }
+        .btn-sm {
+            padding: 10px 18px; border-radius: 8px; font-size: 12px; font-weight: 700;
+            cursor: pointer; border: none; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn-green { background: #e63946; color: #fff; }
+        .btn-green:hover { background: #ff4d5e; }
+        .btn-red { background: #ff4d6a; color: #fff; }
+        .btn-dark { background: #1e1e22; color: #f0f0f0; border: 1px solid #2a2a2e; }
+        .btn-blue { background: #3b82f6; color: #fff; }
+        .btn-blue:hover { background: #60a5fa; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; font-size: 11px; color: #8a8a8e; text-transform: uppercase; letter-spacing: 1px; padding: 8px 12px; border-bottom: 1px solid #2a2a2e; }
+        td { padding: 10px 12px; font-size: 13px; border-bottom: 1px solid #1e1e22; }
+        .thumb { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; background: #1e1e22; }
+        .status { padding: 16px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; display: none; }
+        .status.success { background: rgba(230,57,70,0.15); color: #ff6b78; display: block; }
+        .status.error { background: rgba(255,77,106,0.15); color: #ff4d6a; display: block; }
+        .actions-row { display: flex; gap: 8px; margin-top: 16px; }
+        .search-bar {
+            display: flex; gap: 8px; margin-bottom: 16px;
+        }
+        .search-bar input {
+            flex: 1; padding: 10px 16px; font-size: 13px;
+        }
+        .search-bar select {
+            width: auto; padding: 10px 16px; font-size: 13px;
+        }
+
+        /* Edit Modal */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+            z-index: 1000; align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: #141416; border: 1px solid #2a2a2e; border-radius: 16px;
+            max-width: 600px; width: 100%; padding: 32px; position: relative;
+            max-height: 90vh; overflow-y: auto;
+        }
+        .modal h2 { margin-bottom: 20px; }
+        .modal-close {
+            position: absolute; top: 16px; right: 16px; background: #1e1e22;
+            border: 1px solid #2a2a2e; color: #8a8a8e; font-size: 18px;
+            width: 36px; height: 36px; border-radius: 8px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .modal-close:hover { border-color: #e63946; color: #e63946; }
+        .edit-preview {
+            width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px;
+            background: #1e1e22; margin-bottom: 16px;
+        }
+        .td-actions { display: flex; gap: 4px; }
+
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav class="admin-nav">
+        <h1>Products</h1>
+        <div>
+            <a href="/admin">Dashboard</a>
+            <a href="/admin/analytics">Analytics</a>
+            <a href="/" target="_blank">View Site</a>
+            <a href="/admin/logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="admin-content">
+        <div id="statusMsg" class="status"></div>
+
+        <!-- Scrape & Import -->
+        <div class="panel">
+            <h2>Scrape & Import from Link</h2>
+            <p style="font-size:12px;color:#8a8a8e;margin-bottom:12px;">
+                Paste a Weidian, Taobao, or 1688 link. Every variant (colorway/style) will be scraped with its image, name, and price.
+            </p>
+            <div class="form-grid">
+                <div class="form-full">
+                    <label>Product Link *</label>
+                    <input type="url" id="scrapeUrl" placeholder="https://weidian.com/item.html?itemID=..." required>
+                </div>
+                <div>
+                    <label>Category</label>
+                    <input type="text" id="scrapeCategory" placeholder="shoes">
+                </div>
+                <div style="display:flex;align-items:flex-end;">
+                    <button type="button" class="btn-sm btn-green" onclick="scrapeLink()" style="width:100%;">Scrape Products</button>
+                </div>
+            </div>
+
+            <div id="scrapeResults" style="display:none;margin-top:20px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                    <h3 style="font-size:14px;" id="scrapeResultTitle">—</h3>
+                    <span style="font-size:12px;color:#8a8a8e;" id="scrapeResultCount">—</span>
+                </div>
+                <div id="scrapeGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;max-height:500px;overflow-y:auto;"></div>
+                <div class="actions-row" style="margin-top:16px;">
+                    <button class="btn-sm btn-green" onclick="importAll()">Import All</button>
+                    <button class="btn-sm btn-dark" onclick="importSelected()">Import Selected</button>
+                    <button class="btn-sm btn-dark" onclick="clearScrape()">Clear</button>
+                </div>
+            </div>
+
+            <div id="scrapeLoading" style="display:none;text-align:center;padding:24px;color:#8a8a8e;font-size:13px;">
+                Scraping... this may take a few seconds.
+            </div>
+        </div>
+
+        <!-- Add Product -->
+        <div class="panel">
+            <h2>Add Product</h2>
+            <form id="addForm" onsubmit="return addProduct(event)">
+                <div class="form-grid">
+                    <div>
+                        <label>Product Name *</label>
+                        <input type="text" id="pName" required placeholder="Jordan 4 Retro">
+                    </div>
+                    <div>
+                        <label>Category</label>
+                        <input type="text" id="pCategory" placeholder="shoes">
+                    </div>
+                    <div>
+                        <label>Price</label>
+                        <input type="text" id="pPrice" placeholder="45">
+                    </div>
+                    <div>
+                        <label>Retail Price</label>
+                        <input type="text" id="pRetail" placeholder="190">
+                    </div>
+                    <div class="form-full">
+                        <label>Product URL (Weidian/Taobao/1688)</label>
+                        <input type="url" id="pUrl" placeholder="https://...">
+                    </div>
+                    <div class="form-full">
+                        <label>Image URL</label>
+                        <input type="url" id="pImage" placeholder="https://...">
+                    </div>
+                    <div>
+                        <label>Seller</label>
+                        <input type="text" id="pSeller" placeholder="Seller name">
+                    </div>
+                    <div>
+                        <label>Batch</label>
+                        <input type="text" id="pBatch" placeholder="Batch name">
+                    </div>
+                </div>
+                <div class="actions-row">
+                    <button type="submit" class="btn-sm btn-green">Add Product</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Bulk Upload -->
+        <div class="panel">
+            <h2>Bulk Upload (JSON)</h2>
+            <p style="font-size:12px;color:#8a8a8e;margin-bottom:12px;">
+                Paste JSON array of products. Each needs at minimum: name, price, url, image, category.
+            </p>
+            <textarea id="bulkJson" placeholder='[{"name":"Jordan 4","price":"45","url":"...","image":"...","category":"shoes"}]'></textarea>
+            <div class="actions-row">
+                <button class="btn-sm btn-green" onclick="bulkUpload()">Upload Products</button>
+            </div>
+        </div>
+
+        <!-- Category Management -->
+        <div class="panel">
+            <h2>Add Category</h2>
+            <div class="form-grid">
+                <div>
+                    <label>Slug *</label>
+                    <input type="text" id="cSlug" placeholder="shoes">
+                </div>
+                <div>
+                    <label>Name *</label>
+                    <input type="text" id="cName" placeholder="Shoes">
+                </div>
+                <div>
+                    <label>Icon (emoji)</label>
+                    <input type="text" id="cIcon" placeholder="">
+                </div>
+                <div>
+                    <label>Sort Order</label>
+                    <input type="number" id="cOrder" value="0">
+                </div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-sm btn-green" onclick="addCategory()">Add Category</button>
+            </div>
+        </div>
+
+        <!-- Product List -->
+        <div class="panel">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+                <h2 style="margin:0;">All Products ({{ products|length }})</h2>
+                <div style="display:flex;gap:8px;">
+                    <button class="btn-sm btn-dark" onclick="toggleSelectAll()">Select All</button>
+                    <button class="btn-sm btn-red" onclick="deleteSelected()">Delete Selected</button>
+                </div>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="tableSearch" placeholder="Search products..." oninput="filterTable()">
+                <select id="tableCatFilter" onchange="filterTable()">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.slug }}">{{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div style="overflow-x:auto;">
+                <table id="productTable">
+                    <thead>
+                        <tr><th><input type="checkbox" id="selectAllCb" onchange="toggleSelectAll()"></th><th></th><th>Name</th><th>Category</th><th>Price</th><th>Seller</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for p in products %}
+                        <tr data-id="{{ p.id }}" data-name="{{ p.name }}" data-cat="{{ p.category }}" data-price="{{ p.price }}" data-image="{{ p.image }}" data-url="{{ p.url }}" data-seller="{{ p.seller }}" data-batch="{{ p.batch or '' }}" data-retail="{{ p.retail_price or '' }}" data-tags="{{ p.tags or '' }}">
+                            <td><input type="checkbox" class="product-cb" value="{{ p.id }}"></td>
+                            <td><img class="thumb" src="{{ p.image }}" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none'"></td>
+                            <td>{{ p.name }}</td>
+                            <td>{{ p.category }}</td>
+                            <td>${{ p.price }}</td>
+                            <td style="color:#8a8a8e;">{{ p.seller or '—' }}</td>
+                            <td>
+                                <div class="td-actions">
+                                    <button class="btn-sm btn-blue" onclick="openEdit(this.closest('tr'))">Edit</button>
+                                    <button class="btn-sm btn-red" onclick="deleteProduct('{{ p.id }}')">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeEdit()">&times;</button>
+            <h2>Edit Product</h2>
+            <img class="edit-preview" id="editPreview" src="" alt="Preview" onerror="this.style.display='none'">
+            <input type="hidden" id="editId">
+            <div class="form-grid">
+                <div class="form-full">
+                    <label>Product Name</label>
+                    <input type="text" id="editName">
+                </div>
+                <div>
+                    <label>Category</label>
+                    <select id="editCategory">
+                        <option value="">—</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat.slug }}">{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label>Price (USD)</label>
+                    <input type="text" id="editPrice">
+                </div>
+                <div>
+                    <label>Seller</label>
+                    <input type="text" id="editSeller">
+                </div>
+                <div>
+                    <label>Retail Price</label>
+                    <input type="text" id="editRetail">
+                </div>
+                <div class="form-full">
+                    <label>Image URL</label>
+                    <input type="url" id="editImage" oninput="document.getElementById('editPreview').src=this.value;document.getElementById('editPreview').style.display='block';">
+                </div>
+                <div class="form-full">
+                    <label>Product URL (Weidian/Taobao/1688)</label>
+                    <input type="url" id="editUrl">
+                </div>
+                <div>
+                    <label>Batch</label>
+                    <input type="text" id="editBatch">
+                </div>
+                <div>
+                    <label>Tags (comma separated)</label>
+                    <input type="text" id="editTags">
+                </div>
+            </div>
+            <div class="actions-row" style="margin-top:20px;">
+                <button class="btn-sm btn-green" onclick="saveEdit()" style="flex:1;">Save Changes</button>
+                <button class="btn-sm btn-dark" onclick="closeEdit()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showStatus(msg, type) {
+            var el = document.getElementById('statusMsg');
+            el.textContent = msg;
+            el.className = 'status ' + type;
+            setTimeout(function() { el.className = 'status'; }, 4000);
+        }
+
+        // === EDIT ===
+        function openEdit(tr) {
+            document.getElementById('editId').value = tr.dataset.id;
+            document.getElementById('editName').value = tr.dataset.name;
+            document.getElementById('editCategory').value = tr.dataset.cat;
+            document.getElementById('editPrice').value = tr.dataset.price;
+            document.getElementById('editImage').value = tr.dataset.image;
+            document.getElementById('editUrl').value = tr.dataset.url;
+            document.getElementById('editSeller').value = tr.dataset.seller;
+            document.getElementById('editBatch').value = tr.dataset.batch;
+            document.getElementById('editRetail').value = tr.dataset.retail;
+            document.getElementById('editTags').value = tr.dataset.tags;
+
+            var preview = document.getElementById('editPreview');
+            if (tr.dataset.image) {
+                preview.src = tr.dataset.image;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+            }
+
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function closeEdit() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        async function saveEdit() {
+            var pid = document.getElementById('editId').value;
+            var data = {
+                name: document.getElementById('editName').value,
+                price: document.getElementById('editPrice').value,
+                image: document.getElementById('editImage').value,
+                url: document.getElementById('editUrl').value,
+                category: document.getElementById('editCategory').value,
+                seller: document.getElementById('editSeller').value,
+                batch: document.getElementById('editBatch').value,
+                retail_price: document.getElementById('editRetail').value,
+                tags: document.getElementById('editTags').value,
+            };
+
+            try {
+                var res = await fetch('/admin/products/update/' + pid, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data),
+                });
+                var json = await res.json();
+                if (json.ok) {
+                    showStatus('Product updated!', 'success');
+                    closeEdit();
+                    // Update the row in place
+                    var tr = document.querySelector('tr[data-id="' + pid + '"]');
+                    if (tr) {
+                        tr.dataset.name = data.name;
+                        tr.dataset.cat = data.category;
+                        tr.dataset.price = data.price;
+                        tr.dataset.image = data.image;
+                        tr.dataset.url = data.url;
+                        tr.dataset.seller = data.seller;
+                        tr.dataset.batch = data.batch;
+                        tr.dataset.retail = data.retail_price;
+                        tr.dataset.tags = data.tags;
+                        var cells = tr.querySelectorAll('td');
+                        var img = cells[1].querySelector('img');
+                        if (img) { img.src = data.image; img.style.display = ''; }
+                        cells[2].textContent = data.name;
+                        cells[3].textContent = data.category;
+                        cells[4].textContent = '$' + data.price;
+                        cells[5].textContent = data.seller || '—';
+                    }
+                } else {
+                    showStatus(json.error || 'Update failed', 'error');
+                }
+            } catch(e) {
+                showStatus('Error: ' + e.message, 'error');
+            }
+        }
+
+        // Close modal on overlay click
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) closeEdit();
+        });
+
+        // Close modal on Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeEdit();
+        });
+
+        // === SEARCH & FILTER ===
+        function filterTable() {
+            var q = document.getElementById('tableSearch').value.toLowerCase();
+            var cat = document.getElementById('tableCatFilter').value;
+            var rows = document.querySelectorAll('#productTable tbody tr');
+            rows.forEach(function(tr) {
+                var name = (tr.dataset.name || '').toLowerCase();
+                var seller = (tr.dataset.seller || '').toLowerCase();
+                var rowCat = tr.dataset.cat || '';
+                var matchSearch = !q || name.includes(q) || seller.includes(q);
+                var matchCat = !cat || rowCat === cat;
+                tr.style.display = (matchSearch && matchCat) ? '' : 'none';
+            });
+        }
+
+        // === ADD PRODUCT ===
+        async function addProduct(e) {
+            e.preventDefault();
+            var data = {
+                name: document.getElementById('pName').value,
+                price: document.getElementById('pPrice').value,
+                price_numeric: parseFloat(document.getElementById('pPrice').value) || 0,
+                retail_price: document.getElementById('pRetail').value,
+                url: document.getElementById('pUrl').value,
+                image: document.getElementById('pImage').value,
+                category: document.getElementById('pCategory').value,
+                seller: document.getElementById('pSeller').value,
+                batch: document.getElementById('pBatch').value,
+            };
+            var res = await fetch('/admin/products/add', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data),
+            });
+            var json = await res.json();
+            if (json.ok) {
+                showStatus('Product added!', 'success');
+                document.getElementById('addForm').reset();
+                setTimeout(function() { location.reload(); }, 1000);
+            } else {
+                showStatus(json.error || 'Failed', 'error');
+            }
+        }
+
+        // === BULK ===
+        async function bulkUpload() {
+            var raw = document.getElementById('bulkJson').value;
+            var products;
+            try { products = JSON.parse(raw); } catch(e) { return showStatus('Invalid JSON', 'error'); }
+            if (!Array.isArray(products)) return showStatus('Must be a JSON array', 'error');
+
+            var res = await fetch('/admin/products/bulk', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ products: products }),
+            });
+            var json = await res.json();
+            if (json.ok) {
+                showStatus(json.count + ' products uploaded!', 'success');
+                setTimeout(function() { location.reload(); }, 1000);
+            } else {
+                showStatus(json.error || 'Failed', 'error');
+            }
+        }
+
+        // === CATEGORY ===
+        async function addCategory() {
+            var data = {
+                slug: document.getElementById('cSlug').value,
+                name: document.getElementById('cName').value,
+                icon: document.getElementById('cIcon').value,
+                sort_order: parseInt(document.getElementById('cOrder').value) || 0,
+            };
+            if (!data.slug || !data.name) return showStatus('Slug and name required', 'error');
+            var res = await fetch('/admin/categories/add', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data),
+            });
+            var json = await res.json();
+            if (json.ok) {
+                showStatus('Category added!', 'success');
+                setTimeout(function() { location.reload(); }, 1000);
+            } else {
+                showStatus(json.error || 'Failed', 'error');
+            }
+        }
+
+        // === DELETE ===
+        async function deleteProduct(id) {
+            if (!confirm('Delete this product?')) return;
+            var res = await fetch('/admin/products/delete/' + id, { method: 'DELETE' });
+            var json = await res.json();
+            if (json.ok) {
+                showStatus('Product deleted', 'success');
+                var tr = document.querySelector('tr[data-id="' + id + '"]');
+                if (tr) tr.remove();
+            }
+        }
+
+        function toggleSelectAll() {
+            var cbs = document.querySelectorAll('.product-cb');
+            var allChecked = Array.from(cbs).every(function(cb) { return cb.checked; });
+            cbs.forEach(function(cb) { cb.checked = !allChecked; });
+            var main = document.getElementById('selectAllCb');
+            if (main) main.checked = !allChecked;
+        }
+
+        async function deleteSelected() {
+            var cbs = document.querySelectorAll('.product-cb:checked');
+            var ids = Array.from(cbs).map(function(cb) { return cb.value; });
+            if (!ids.length) return showStatus('No products selected', 'error');
+            if (!confirm('Delete ' + ids.length + ' products?')) return;
+            var res = await fetch('/admin/products/delete-batch', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ ids: ids }),
+            });
+            var json = await res.json();
+            if (json.ok) {
+                showStatus(json.count + ' products deleted', 'success');
+                ids.forEach(function(id) {
+                    var tr = document.querySelector('tr[data-id="' + id + '"]');
+                    if (tr) tr.remove();
+                });
+            } else {
+                showStatus(json.error || 'Failed', 'error');
+            }
+        }
+
+        // === SCRAPE ===
+        var scrapedProducts = [];
+
+        async function scrapeLink() {
+            var url = document.getElementById('scrapeUrl').value.trim();
+            var category = document.getElementById('scrapeCategory').value.trim();
+            if (!url) return showStatus('Enter a URL', 'error');
+
+            document.getElementById('scrapeLoading').style.display = 'block';
+            document.getElementById('scrapeResults').style.display = 'none';
+
+            try {
+                var res = await fetch('/admin/scrape', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ url: url, category: category }),
+                });
+                var data = await res.json();
+                document.getElementById('scrapeLoading').style.display = 'none';
+
+                if (data.error) return showStatus(data.error, 'error');
+                if (!data.products || !data.products.length) return showStatus('No products found in listing', 'error');
+
+                scrapedProducts = data.products;
+                document.getElementById('scrapeResultTitle').textContent = data.listing_name || 'Scraped Products';
+                document.getElementById('scrapeResultCount').textContent = data.total_variants + ' items found';
+
+                var grid = document.getElementById('scrapeGrid');
+                grid.innerHTML = '';
+                data.products.forEach(function(p, i) {
+                    var card = document.createElement('div');
+                    card.style.cssText = 'background:#1e1e22;border:1px solid #2a2a2e;border-radius:8px;overflow:hidden;cursor:pointer;position:relative;';
+                    card.dataset.index = i;
+                    card.dataset.selected = 'true';
+                    card.onclick = function() {
+                        var sel = this.dataset.selected === 'true';
+                        this.dataset.selected = sel ? 'false' : 'true';
+                        this.style.opacity = sel ? '0.3' : '1';
+                        this.querySelector('.check').textContent = sel ? '' : '\u2713';
+                    };
+                    card.innerHTML = '<div class="check" style="position:absolute;top:6px;right:6px;background:#e63946;color:#fff;width:20px;height:20px;border-radius:50%;font-size:11px;display:flex;align-items:center;justify-content:center;">\u2713</div>'
+                        + '<img src="' + (p.image || '') + '" style="width:100%;aspect-ratio:1;object-fit:cover;background:#111;" onerror="this.style.background=\'#222\'">'
+                        + '<div style="padding:8px;"><div style="font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + (p.name || '\u2014') + '</div>'
+                        + '<div style="font-size:12px;color:#e63946;font-weight:700;margin-top:4px;">$' + (p.price || '?') + '</div></div>';
+                    grid.appendChild(card);
+                });
+
+                document.getElementById('scrapeResults').style.display = 'block';
+                showStatus('Found ' + data.total_variants + ' items!', 'success');
+            } catch(e) {
+                document.getElementById('scrapeLoading').style.display = 'none';
+                showStatus('Scrape failed: ' + e.message, 'error');
+            }
+        }
+
+        async function importAll() {
+            var products = scrapedProducts.filter(function(_, i) {
+                var card = document.querySelector('[data-index="' + i + '"]');
+                return !card || card.dataset.selected === 'true';
+            });
+            if (!products.length) return showStatus('No products selected', 'error');
+            var res = await fetch('/admin/scrape/import', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ products: products }),
+            });
+            var json = await res.json();
+            if (json.ok) {
+                showStatus(json.count + ' products imported!', 'success');
+                setTimeout(function() { location.reload(); }, 1500);
+            } else {
+                showStatus(json.error || 'Import failed', 'error');
+            }
+        }
+
+        function importSelected() { importAll(); }
+
+        function clearScrape() {
+            scrapedProducts = [];
+            document.getElementById('scrapeResults').style.display = 'none';
+            document.getElementById('scrapeUrl').value = '';
+        }
+    </script>
+</body>
+</html>

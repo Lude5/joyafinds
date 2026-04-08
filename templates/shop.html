@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}JoyaFinds — Shop{% endblock %}
+
+{% block extra_css %}
+.shop-hero { padding: 140px 40px 60px; text-align: center; max-width: 800px; margin: 0 auto; }
+.shop-hero h1 { font-family: var(--font-display); font-size: 48px; font-weight: 800; letter-spacing: -2px; margin-bottom: 24px; animation: fadeUp 0.5s ease both; }
+.search-wrap { max-width: 480px; margin: 0 auto 32px; display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: 32px; overflow: hidden; transition: border-color 0.3s; }
+.search-wrap:focus-within { border-color: var(--accent); }
+.search-wrap input { flex: 1; border: none; outline: none; padding: 16px 20px; font-size: 14px; background: none; color: var(--text); }
+.search-wrap input::placeholder { color: var(--text-muted); }
+.search-wrap button { background: none; border: none; padding: 0 20px; cursor: pointer; color: var(--text-muted); font-size: 16px; }
+.filter-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+.filter-pill { padding: 8px 20px; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--border); border-radius: 24px; transition: all 0.2s; cursor: pointer; }
+.filter-pill:hover { border-color: var(--text-secondary); color: var(--text-secondary); }
+.filter-pill.active { border-color: var(--accent); color: var(--accent-light); background: var(--accent-dim); }
+.shop-meta { display: flex; justify-content: space-between; align-items: center; max-width: 1300px; margin: 0 auto; padding: 0 40px 16px; }
+.shop-count { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; }
+.shop-sort { padding: 8px 16px; border: 1px solid var(--border); border-radius: 20px; background: none; color: var(--text-secondary); font-size: 11px; cursor: pointer; letter-spacing: 1px; }
+@media (max-width: 768px) { .shop-hero { padding: 120px 20px 40px; } .shop-hero h1 { font-size: 32px; } .shop-meta { padding: 0 20px 16px; } }
+{% endblock %}
+
+{% block content %}
+<div class="shop-hero">
+    <h1>{% if search_query %}Results for "{{ search_query }}"{% elif current_category %}{{ current_category|title }}{% else %}All Finds{% endif %}</h1>
+    <form class="search-wrap" action="/shop" method="get">
+        <input type="text" name="q" placeholder="Search products..." value="{{ search_query or '' }}">
+        <button type="submit">&#128269;</button>
+    </form>
+    <div class="filter-row">
+        <a href="/shop" class="filter-pill {% if not current_category %}active{% endif %}">All</a>
+        {% for cat in categories %}
+        <a href="/shop?category={{ cat.slug }}" class="filter-pill {% if current_category == cat.slug %}active{% endif %}">{{ cat.name }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="shop-meta">
+    <span class="shop-count">{{ total }} product{{ 's' if total != 1 }} — page {{ page }}/{{ total_pages }}</span>
+    <select class="shop-sort" onchange="window.location.href='/shop?category={{ current_category }}&sort='+this.value{% if search_query %}+'&q={{ search_query }}'{% endif %}">
+        <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Newest</option>
+        <option value="price_low" {% if current_sort == 'price_low' %}selected{% endif %}>Price: Low → High</option>
+        <option value="price_high" {% if current_sort == 'price_high' %}selected{% endif %}>Price: High → Low</option>
+    </select>
+</div>
+
+<section class="section" style="padding-top:0;">
+    <div class="product-grid">
+        {% for p in products %}
+        <a href="/go/{{ p.id }}" target="_blank" rel="noopener" class="product-item reveal reveal-d{{ loop.index0 % 4 }}" onclick="trackClick('affiliate','buy','{{ p.id }}','{{ p.category }}','{{ p.name }}')">
+            <div class="product-image-wrap">
+                <div class="product-glow"></div>
+                <img class="product-image" src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" referrerpolicy="no-referrer">
+                <div class="product-buy-overlay">
+                    <span class="product-buy-btn">Buy on JoyaBuy</span>
+                </div>
+            </div>
+            <div class="product-name">{{ p.name }}</div>
+            {% if p.seller %}<div class="product-brand">{{ p.seller }}</div>{% endif %}
+            <div class="product-price">${{ p.price }}</div>
+        </a>
+        {% endfor %}
+    </div>
+    {% if not products %}
+    <div style="text-align:center;padding:80px 20px;color:var(--text-muted);">
+        <p style="font-size:14px;letter-spacing:1px;">No products found</p>
+    </div>
+    {% endif %}
+
+    {% if total_pages > 1 %}
+    <div style="display:flex;justify-content:center;gap:8px;padding:48px 0 0;flex-wrap:wrap;">
+        {% if page > 1 %}
+        <a href="/shop?category={{ current_category }}&sort={{ current_sort }}&page={{ page - 1 }}{% if search_query %}&q={{ search_query }}{% endif %}" style="padding:10px 20px;border:1px solid var(--border);border-radius:24px;font-size:12px;color:var(--text-secondary);letter-spacing:1px;transition:all 0.2s;">&larr; Prev</a>
+        {% endif %}
+        {% for p_num in range(1, total_pages + 1) %}
+        {% if p_num == page or p_num == 1 or p_num == total_pages or (p_num >= page - 2 and p_num <= page + 2) %}
+        <a href="/shop?category={{ current_category }}&sort={{ current_sort }}&page={{ p_num }}{% if search_query %}&q={{ search_query }}{% endif %}" style="padding:10px 16px;border:1px solid {% if p_num == page %}var(--accent){% else %}var(--border){% endif %};border-radius:24px;font-size:12px;{% if p_num == page %}color:var(--accent-light);background:var(--accent-dim);{% else %}color:var(--text-muted);{% endif %}letter-spacing:1px;transition:all 0.2s;">{{ p_num }}</a>
+        {% elif p_num == page - 3 or p_num == page + 3 %}
+        <span style="padding:10px 8px;color:var(--text-muted);font-size:12px;">...</span>
+        {% endif %}
+        {% endfor %}
+        {% if page < total_pages %}
+        <a href="/shop?category={{ current_category }}&sort={{ current_sort }}&page={{ page + 1 }}{% if search_query %}&q={{ search_query }}{% endif %}" style="padding:10px 20px;border:1px solid var(--border);border-radius:24px;font-size:12px;color:var(--text-secondary);letter-spacing:1px;transition:all 0.2s;">Next &rarr;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
