@@ -58,110 +58,86 @@
     margin-top: 40px; animation: fadeUp 0.4s ease 0.5s both;
 }
 
-/* === PRODUCT SLIDES — finds.org style horizontal full-height cards === */
-.pslides {
+/* === PRODUCT TICKER COLUMNS — finds.org style vertical auto-scroll === */
+.pticker-section {
     position: relative; overflow: hidden;
-    height: 85vh; max-height: 900px; min-height: 500px;
-    background: var(--bg);
-}
-.pslides-track {
-    display: flex; height: 100%;
-    overflow-x: auto; scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-}
-.pslides-track::-webkit-scrollbar { display: none; }
-.pslide {
-    flex: 0 0 100%; scroll-snap-align: start;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    position: relative; padding: 40px 24px;
-}
-.pslide-inner {
-    max-width: 440px; width: 100%; display: flex;
-    flex-direction: column; align-items: center;
-    text-align: center; position: relative; z-index: 2;
-}
-.pslide-badge {
-    font-family: var(--font-mono); font-size: 9px; font-weight: 700;
-    color: var(--accent); text-transform: uppercase; letter-spacing: 2px;
-    margin-bottom: 20px;
-}
-.pslide-img-wrap {
-    width: 100%; max-width: 360px; margin-bottom: 24px;
-    position: relative;
-}
-.pslide-img {
-    width: 100%; aspect-ratio: 1; object-fit: cover;
-    border-radius: 16px; background: var(--surface);
-    transition: transform 0.4s ease;
-}
-.pslide:hover .pslide-img { transform: scale(1.02); }
-.pslide-glow {
-    position: absolute; inset: -40px; border-radius: 50%;
-    background: radial-gradient(circle, var(--accent-dim), transparent 70%);
-    filter: blur(40px); pointer-events: none; z-index: -1;
-}
-.pslide-name {
-    font-family: var(--font-display); font-size: clamp(20px, 4vw, 32px);
-    text-transform: uppercase; line-height: 1; margin-bottom: 10px;
-}
-.pslide-price {
-    font-family: var(--font-mono); font-size: 24px; font-weight: 700;
-    color: var(--accent); margin-bottom: 20px;
-}
-.pslide-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-.pslide-btn {
-    padding: 12px 24px; font-family: var(--font-mono); font-size: 10px;
-    font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
-    border-radius: 10px; cursor: pointer; transition: all 0.2s;
-    text-decoration: none; display: inline-flex; align-items: center;
-}
-.pslide-btn-buy { background: var(--accent); color: #000; border: none; }
-.pslide-btn-buy:hover { background: var(--accent-hover); }
-.pslide-btn-qc { background: transparent; color: var(--text); border: 1px solid var(--border); }
-.pslide-btn-qc:hover { border-color: var(--accent); color: var(--accent); }
-
-/* Bottom fade overlay */
-.pslides-fade {
-    position: absolute; bottom: 0; left: 0; right: 0; height: 100px;
-    background: linear-gradient(transparent, var(--bg)); z-index: 3;
-    pointer-events: none;
-}
-
-/* Dots — bottom left */
-.pslides-dots {
-    position: absolute; bottom: 24px; left: 24px; z-index: 5;
-    display: flex; gap: 5px; opacity: 0.5;
-}
-.pslides-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--text-muted); border: none; cursor: pointer;
-    transition: all 0.3s; padding: 0;
-}
-.pslides-dot.active { background: var(--accent); width: 20px; border-radius: 4px; }
-
-/* Arrows */
-.pslides-arrows {
-    position: absolute; bottom: 24px; right: 24px; z-index: 5;
-    display: flex; gap: 6px;
-}
-.pslides-arrow {
-    width: 36px; height: 36px; border-radius: 10px;
-    background: var(--surface-2); border: 1px solid var(--border-subtle);
-    color: var(--text); font-size: 16px; cursor: pointer;
+    height: 100vh; max-height: 1000px; min-height: 600px;
     display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s;
+    padding: 0 20px;
 }
-.pslides-arrow:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+.pticker-cols {
+    display: flex; gap: 20px; max-width: 1200px; width: 100%;
+    height: 100%; align-items: center; justify-content: center;
+}
+.pticker-col {
+    flex: 1; height: 100%; overflow: hidden; position: relative;
+    mask: linear-gradient(transparent 0%, #000 10%, #000 75%, transparent 100%);
+    -webkit-mask: linear-gradient(transparent 0%, #000 10%, #000 75%, transparent 100%);
+}
+.pticker-scroll {
+    display: flex; flex-direction: column; gap: 16px;
+    animation: tickerScroll 25s linear infinite;
+}
+.pticker-col:nth-child(2) .pticker-scroll { animation-duration: 30s; animation-direction: reverse; }
+.pticker-col:nth-child(3) .pticker-scroll { animation-duration: 22s; }
+@keyframes tickerScroll {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+}
+.pticker-col:hover .pticker-scroll { animation-play-state: paused; }
+
+.pcard {
+    background: var(--surface); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius); overflow: hidden;
+    transition: all 0.3s; cursor: pointer;
+    display: block; color: inherit; text-decoration: none;
+}
+.pcard:hover { border-color: var(--border); box-shadow: 0 8px 32px var(--accent-dim); }
+.pcard-img {
+    width: 100%; aspect-ratio: 4/5; object-fit: cover;
+    background: var(--surface-2);
+}
+.pcard-body { padding: 16px; }
+.pcard-badge {
+    font-family: var(--font-mono); font-size: 8px; font-weight: 700;
+    color: var(--accent); text-transform: uppercase; letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+.pcard-name {
+    font-family: var(--font-display); font-size: 16px;
+    text-transform: uppercase; line-height: 1.1; margin-bottom: 6px;
+}
+.pcard-price {
+    font-family: var(--font-mono); font-size: 16px; font-weight: 700;
+    color: var(--accent); margin-bottom: 12px;
+}
+.pcard-btns { display: flex; gap: 6px; }
+.pcard-btn {
+    flex: 1; padding: 10px 8px; font-family: var(--font-mono); font-size: 9px;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    border-radius: 8px; text-align: center; transition: all 0.2s;
+    text-decoration: none; display: block;
+}
+.pcard-btn-buy { background: var(--accent); color: #000; border: none; }
+.pcard-btn-buy:hover { background: var(--accent-hover); }
+.pcard-btn-qc { background: transparent; color: var(--text-secondary); border: 1px solid var(--border-subtle); }
+.pcard-btn-qc:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Bottom gradient fade */
+.pticker-fade {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
+    background: linear-gradient(rgba(19,22,32,0) -10%, var(--bg) 85%);
+    z-index: 3; pointer-events: none;
+}
 
 @media (max-width: 768px) {
-    .pslides { height: 75vh; min-height: 450px; }
-    .pslide { padding: 24px 16px; }
-    .pslide-img-wrap { max-width: 260px; }
-    .pslide-name { font-size: 20px; }
-    .pslide-price { font-size: 20px; }
-    .pslide-btn { padding: 10px 18px; font-size: 9px; }
+    .pticker-section { max-height: 700px; }
+    .pticker-cols { gap: 10px; }
+    .pticker-col:nth-child(3) { display: none; }
+    .pcard-name { font-size: 13px; }
+    .pcard-price { font-size: 14px; }
+    .pcard-btns { flex-direction: column; }
+    .pcard-btn { font-size: 8px; padding: 8px 6px; }
 }
 
 /* Conveyor / carousel */
@@ -232,39 +208,49 @@
     </div>
 </section>
 
-<!-- Product Slides — full height horizontal scroll like finds.org -->
+<!-- Product Ticker Columns — finds.org style vertical auto-scroll -->
 {% if products %}
-{% set slides = products[:6] %}
-<div class="pslides">
-    <div class="pslides-track" id="pslidesTrack">
-        {% for p in slides %}
-        <div class="pslide">
-            <div class="pslide-inner">
-                <span class="pslide-badge">Best Selling</span>
-                <div class="pslide-img-wrap">
-                    <div class="pslide-glow"></div>
-                    <img class="pslide-img" src="{{ p.image }}" alt="{{ p.name }}" referrerpolicy="no-referrer">
-                </div>
-                <h3 class="pslide-name">{{ p.name }}</h3>
-                <div class="pslide-price">${{ p.price }}</div>
-                <div class="pslide-buttons">
-                    <a href="/go/{{ p.id }}" target="_blank" rel="noopener" class="pslide-btn pslide-btn-buy" onclick="trackClick('affiliate','buy','{{ p.id }}','{{ p.category }}','{{ p.name }}')">Buy on JoyaBuy</a>
-                    <a href="/shop?q={{ p.name }}" class="pslide-btn pslide-btn-qc">Quality Check</a>
-                </div>
+{% set col1 = products[:8] %}
+{% set col2 = products[8:16] if products|length > 8 else products[:8] %}
+{% set col3 = products[16:24] if products|length > 16 else products[:8] %}
+<div class="pticker-section">
+    <div class="pticker-cols">
+        {% for col in [col1, col2, col3] %}
+        <div class="pticker-col">
+            <div class="pticker-scroll">
+                {% for p in col %}
+                <a href="/go/{{ p.id }}" target="_blank" rel="noopener" class="pcard" onclick="trackClick('affiliate','buy','{{ p.id }}','{{ p.category }}','{{ p.name }}')">
+                    <img class="pcard-img" src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" referrerpolicy="no-referrer">
+                    <div class="pcard-body">
+                        <div class="pcard-badge">Best Selling</div>
+                        <h3 class="pcard-name">{{ p.name }}</h3>
+                        <div class="pcard-price">${{ p.price }}</div>
+                        <div class="pcard-btns">
+                            <span class="pcard-btn pcard-btn-buy">Buy on JoyaBuy</span>
+                            <span class="pcard-btn pcard-btn-qc">Quality Check</span>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+                {% for p in col %}
+                <a href="/go/{{ p.id }}" target="_blank" rel="noopener" class="pcard">
+                    <img class="pcard-img" src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" referrerpolicy="no-referrer">
+                    <div class="pcard-body">
+                        <div class="pcard-badge">Best Selling</div>
+                        <h3 class="pcard-name">{{ p.name }}</h3>
+                        <div class="pcard-price">${{ p.price }}</div>
+                        <div class="pcard-btns">
+                            <span class="pcard-btn pcard-btn-buy">Buy on JoyaBuy</span>
+                            <span class="pcard-btn pcard-btn-qc">Quality Check</span>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
             </div>
         </div>
         {% endfor %}
     </div>
-    <div class="pslides-fade"></div>
-    <div class="pslides-dots" id="pslidesDots">
-        {% for p in slides %}
-        <button class="pslides-dot {% if loop.index0 == 0 %}active{% endif %}" onclick="goPS({{ loop.index0 }})"></button>
-        {% endfor %}
-    </div>
-    <div class="pslides-arrows">
-        <button class="pslides-arrow" onclick="movePS(-1)">&#8249;</button>
-        <button class="pslides-arrow" onclick="movePS(1)">&#8250;</button>
-    </div>
+    <div class="pticker-fade"></div>
 </div>
 {% endif %}
 
@@ -435,41 +421,6 @@
 {% endblock %}
 
 {% block extra_js %}
-// Product slides — horizontal snap scroll
-var psTrack = document.getElementById('pslidesTrack');
-var psDots = document.querySelectorAll('.pslides-dot');
-var psIdx = 0;
-var psCount = document.querySelectorAll('.pslide').length;
-
-function goPS(i) {
-    psIdx = i;
-    if (psIdx < 0) psIdx = psCount - 1;
-    if (psIdx >= psCount) psIdx = 0;
-    psTrack.scrollTo({ left: psIdx * psTrack.offsetWidth, behavior: 'smooth' });
-    psDots.forEach(function(d, j) { d.classList.toggle('active', j === psIdx); });
-}
-function movePS(dir) { goPS(psIdx + dir); }
-
-// Update dots on manual scroll
-if (psTrack) {
-    var psScrollTimer;
-    psTrack.addEventListener('scroll', function() {
-        clearTimeout(psScrollTimer);
-        psScrollTimer = setTimeout(function() {
-            var newIdx = Math.round(psTrack.scrollLeft / psTrack.offsetWidth);
-            if (newIdx !== psIdx) {
-                psIdx = newIdx;
-                psDots.forEach(function(d, j) { d.classList.toggle('active', j === psIdx); });
-            }
-        }, 100);
-    });
-}
-
-// Auto-advance every 5s
-if (psCount > 1) {
-    setInterval(function() { movePS(1); }, 5000);
-}
-
 // Conveyor
 var convEl = document.getElementById('conv');
 initConveyor(convEl);
