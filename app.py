@@ -63,10 +63,21 @@ def home():
     products = get_products()
     categories = get_categories()
     import random
+
+    # Load bg-removed hero images if available
+    hero_file = os.path.join(os.path.dirname(__file__), 'static', 'hero-products.json')
+    hero_products = []
+    if os.path.exists(hero_file):
+        with open(hero_file, 'r', encoding='utf-8') as _hf:
+            hero_products = json.load(_hf)
+    if len(hero_products) < 24:
+        hero_products = list(products)
+    random.shuffle(hero_products)
+    hero_products = hero_products[:24]
+
     shuffled = list(products)
     random.shuffle(shuffled)
     conveyor = shuffled[:40]
-    hero_products = shuffled[:24]
     return render_template('home.html', products=products, conveyor=conveyor, hero_products=hero_products, categories=categories)
 
 

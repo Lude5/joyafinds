@@ -1,0 +1,338 @@
+[
+  {
+    "id": "jk5239e389",
+    "name": "Nike Tee-21",
+    "price": "0",
+    "category": "shirts",
+    "image": "/static/hero-imgs/491bd258104b.png"
+  },
+  {
+    "id": "jk286183ab",
+    "name": "Maison Margiela Hoodie",
+    "price": "17.08",
+    "category": "hoodies",
+    "image": "/static/hero-imgs/7fc8b69f476a.png"
+  },
+  {
+    "id": "jk4a381914",
+    "name": "Nike Set-385",
+    "price": "0",
+    "category": "trending",
+    "image": "/static/hero-imgs/a3de04a678d0.png"
+  },
+  {
+    "id": "jkd40adeb9",
+    "name": "Dragon Ball Figurines [Super Saiyan 4 Goku Statue]",
+    "price": "15.69",
+    "category": "trending",
+    "image": "/static/hero-imgs/0c46e22abf8f.png"
+  },
+  {
+    "id": "jk55fbe330",
+    "name": "Gallery Dept Hoodie",
+    "price": "26.15",
+    "category": "hoodies",
+    "image": "/static/hero-imgs/722f92d49561.png"
+  },
+  {
+    "id": "jka38c26ff",
+    "name": "2026 season Senegal home Fan version",
+    "price": "13.08",
+    "category": "shirts",
+    "image": "/static/hero-imgs/aa42e1337777.png"
+  },
+  {
+    "id": "jk9736d521",
+    "name": "Alo Pants",
+    "price": "23.69",
+    "category": "womens",
+    "image": "/static/hero-imgs/1c54c0c7b025.png"
+  },
+  {
+    "id": "jkf7551d19",
+    "name": "Tissot -1",
+    "price": "0",
+    "category": "tech",
+    "image": "/static/hero-imgs/d0ac7f2635f6.png"
+  },
+  {
+    "id": "jkd420d488",
+    "name": "2004 Brazil home retro Kids kit",
+    "price": "15.08",
+    "category": "shirts",
+    "image": "/static/hero-imgs/c42e207572db.png"
+  },
+  {
+    "id": "jk36790eb3",
+    "name": "Spider Shorts-6",
+    "price": "0",
+    "category": "shirts",
+    "image": "/static/hero-imgs/c52ddf11d452.png"
+  },
+  {
+    "id": "jkd50cf862",
+    "name": "Nike Polo",
+    "price": "20.0",
+    "category": "shirts",
+    "image": "/static/hero-imgs/ff52f49255c4.png"
+  },
+  {
+    "id": "jk571a744c",
+    "name": "Van Cleef & Arpels Ring",
+    "price": "27.69",
+    "category": "accessories",
+    "image": "/static/hero-imgs/7cbf20f8c5a7.png"
+  },
+  {
+    "id": "jk8f4e9e8b",
+    "name": "Lacoste Coat-492",
+    "price": "0",
+    "category": "jackets",
+    "image": "/static/hero-imgs/a7a21226da00.png"
+  },
+  {
+    "id": "jk1ff60c97",
+    "name": "Alo Vest",
+    "price": "14.31",
+    "category": "womens",
+    "image": "/static/hero-imgs/3f1ae70eca49.png"
+  },
+  {
+    "id": "jk64d0e2dd",
+    "name": "Burberry Hoodie-431",
+    "price": "0",
+    "category": "hoodies",
+    "image": "/static/hero-imgs/55b030b69e37.png"
+  },
+  {
+    "id": "jkb5f294db",
+    "name": "Chrome Hearts Long Tee",
+    "price": "30.83",
+    "category": "shirts",
+    "image": "/static/hero-imgs/d9f0ff5ff57d.png"
+  },
+  {
+    "id": "jk56f3a589",
+    "name": "MLB Down Jacket",
+    "price": "12.45",
+    "category": "jackets",
+    "image": "/static/hero-imgs/28edb5ee2a97.png"
+  },
+  {
+    "id": "jk15a3d11d",
+    "name": "Alo Long Tee",
+    "price": "14.62",
+    "category": "womens",
+    "image": "/static/hero-imgs/9d190b05c668.png"
+  },
+  {
+    "id": "jkdf0f0a98",
+    "name": "Zara Waistcoat",
+    "price": "20.46",
+    "category": "womens",
+    "image": "/static/hero-imgs/a5d72bcbf69f.png"
+  },
+  {
+    "id": "jk22ecaad3",
+    "name": "Nike Set",
+    "price": "7.15",
+    "category": "hoodies",
+    "image": "/static/hero-imgs/867cca119f8c.png"
+  },
+  {
+    "id": "jkecb49b48",
+    "name": "Skims Dress",
+    "price": "43.08",
+    "category": "womens",
+    "image": "/static/hero-imgs/cf772427e3b2.png"
+  },
+  {
+    "id": "jk91d83479",
+    "name": "Palm Angels Tee-11",
+    "price": "0",
+    "category": "shirts",
+    "image": "/static/hero-imgs/d47523d7f579.png"
+  },
+  {
+    "id": "jkf828066a",
+    "name": "2425 Croatia Wear on both sides windbreaker",
+    "price": "28.92",
+    "category": "shirts",
+    "image": "/static/hero-imgs/d240e0fd2eaa.png"
+  },
+  {
+    "id": "jk86752220",
+    "name": "Dior Coat",
+    "price": "46.15",
+    "category": "jackets",
+    "image": "/static/hero-imgs/81067553664d.png"
+  },
+  {
+    "id": "jk0b974a21",
+    "name": "Stone Island Shorts",
+    "price": "23.08",
+    "category": "shirts",
+    "image": "/static/hero-imgs/95cb3b99bdf5.png"
+  },
+  {
+    "id": "jk2ef3326a",
+    "name": "Hermes Perfume",
+    "price": "23.08",
+    "category": "accessories",
+    "image": "/static/hero-imgs/642d9b324cc5.png"
+  },
+  {
+    "id": "jk0bcb4532",
+    "name": "2026 World Cup Germany Home Jersey Player Version",
+    "price": "14.46",
+    "category": "shirts",
+    "image": "/static/hero-imgs/2185720adc2d.png"
+  },
+  {
+    "id": "jk784cbca4",
+    "name": "Balenciaga Hoodie-31",
+    "price": "0",
+    "category": "hoodies",
+    "image": "/static/hero-imgs/1268c4af3cf4.png"
+  },
+  {
+    "id": "jk8f77ada5",
+    "name": "Gucci Slippers-5",
+    "price": "0",
+    "category": "shoes",
+    "image": "/static/hero-imgs/12f60f4ae0e2.png"
+  },
+  {
+    "id": "jk46f118dc",
+    "name": "Japanese Special Edition Jersey Player Version",
+    "price": "14.46",
+    "category": "shirts",
+    "image": "/static/hero-imgs/81d51508043c.png"
+  },
+  {
+    "id": "jk11e91192",
+    "name": "Alo Vest",
+    "price": "16.15",
+    "category": "womens",
+    "image": "/static/hero-imgs/9f2f0ba95447.png"
+  },
+  {
+    "id": "jk8499933a",
+    "name": "Alo Pants",
+    "price": "18.31",
+    "category": "womens",
+    "image": "/static/hero-imgs/62678c36020a.png"
+  },
+  {
+    "id": "jk75f738ba",
+    "name": "Supreme Hoodie",
+    "price": "17.08",
+    "category": "hoodies",
+    "image": "/static/hero-imgs/99326dc3533a.png"
+  },
+  {
+    "id": "jk7dadf5e1",
+    "name": "2526 Season Roma Second Away Player Version Jersey",
+    "price": "14.46",
+    "category": "shirts",
+    "image": "/static/hero-imgs/b3d8c6d708c8.png"
+  },
+  {
+    "id": "jke42fdcfa",
+    "name": "2425 England Training clothes suit Short sleeve Fan version",
+    "price": "18.15",
+    "category": "shirts",
+    "image": "/static/hero-imgs/6f6aaba5db74.png"
+  },
+  {
+    "id": "jk3d94d594",
+    "name": "Stussy Quilted Jacket",
+    "price": "49.23",
+    "category": "jackets",
+    "image": "/static/hero-imgs/83e28ae2d5ee.png"
+  },
+  {
+    "id": "jk40d50383",
+    "name": "Stone Island Jeans-1",
+    "price": "0",
+    "category": "hoodies",
+    "image": "/static/hero-imgs/68643bd2e81e.png"
+  },
+  {
+    "id": "jkc4f7c25c",
+    "name": "2526 season Portugal home Kids kit",
+    "price": "13.08",
+    "category": "shirts",
+    "image": "/static/hero-imgs/dc747c800492.png"
+  },
+  {
+    "id": "jkecc1cac6",
+    "name": "Alo Set",
+    "price": "31.08",
+    "category": "womens",
+    "image": "/static/hero-imgs/e94d33f25d07.png"
+  },
+  {
+    "id": "jk12af9450",
+    "name": "Under Armour Tee-1",
+    "price": "0",
+    "category": "shirts",
+    "image": "/static/hero-imgs/4dba5a604170.png"
+  },
+  {
+    "id": "jkd888b9f9",
+    "name": "Celine SunGlasses-1",
+    "price": "0",
+    "category": "accessories",
+    "image": "/static/hero-imgs/b4e24673c4dc.png"
+  },
+  {
+    "id": "jk3bfdbedc",
+    "name": "Burberry Tee",
+    "price": "30.77",
+    "category": "shirts",
+    "image": "/static/hero-imgs/efb4387a1e14.png"
+  },
+  {
+    "id": "jkc2daa183",
+    "name": "Nike Set-499",
+    "price": "0",
+    "category": "trending",
+    "image": "/static/hero-imgs/de121b677a1d.png"
+  },
+  {
+    "id": "jke1c021a0",
+    "name": "Gallery Dept Tee",
+    "price": "15.08",
+    "category": "shirts",
+    "image": "/static/hero-imgs/894b621a14c8.png"
+  },
+  {
+    "id": "jk4ce6e9ef",
+    "name": "Strapless, square-neck tight short-sleeved shirt",
+    "price": "8.46",
+    "category": "womens",
+    "image": "/static/hero-imgs/1658e259fe75.png"
+  },
+  {
+    "id": "jkde576af2",
+    "name": "Cartier Necklaces",
+    "price": "26.15",
+    "category": "accessories",
+    "image": "/static/hero-imgs/886734943aa4.png"
+  },
+  {
+    "id": "jk43a2d249",
+    "name": "Bape Hoodie-392",
+    "price": "0",
+    "category": "hoodies",
+    "image": "/static/hero-imgs/6bb17ea5ce01.png"
+  },
+  {
+    "id": "jkda6c926c",
+    "name": "Rolex [OYSTER PERPETUAL]",
+    "price": "10.51",
+    "category": "tech",
+    "image": "/static/hero-imgs/0502717d6799.png"
+  }
+]
