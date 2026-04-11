@@ -19,10 +19,10 @@
 }
 .hero-bg-scroll {
     display: flex; flex-direction: column; gap: 14px;
-    animation: bgTick 28s linear infinite;
+    animation: bgTick 80s linear infinite;
 }
-.hero-bg-col:nth-child(2) .hero-bg-scroll { animation-duration: 35s; animation-direction: reverse; }
-.hero-bg-col:nth-child(3) .hero-bg-scroll { animation-duration: 24s; }
+.hero-bg-col:nth-child(2) .hero-bg-scroll { animation-duration: 95s; animation-direction: reverse; }
+.hero-bg-col:nth-child(3) .hero-bg-scroll { animation-duration: 70s; }
 @keyframes bgTick {
     0% { transform: translateY(0); }
     100% { transform: translateY(-50%); }
@@ -51,19 +51,23 @@
 .hero-overlay {
     position: absolute; inset: 0; z-index: 1; pointer-events: none;
     background:
-        /* Radial vignette: dark edges, slightly visible center */
-        radial-gradient(ellipse 80% 70% at 50% 45%,
-            rgba(19,22,32,0.55) 0%,
-            rgba(19,22,32,0.75) 40%,
-            rgba(19,22,32,0.92) 70%,
+        /* Horizontal fade: solid dark on sides, transparent center strip */
+        linear-gradient(to right,
+            rgba(19,22,32,1) 0%,
+            rgba(19,22,32,0.85) 15%,
+            rgba(19,22,32,0.3) 35%,
+            rgba(19,22,32,0.15) 50%,
+            rgba(19,22,32,0.3) 65%,
+            rgba(19,22,32,0.85) 85%,
             rgba(19,22,32,1) 100%
         ),
-        /* Top solid for nav + text readability */
+        /* Vertical fade: solid top/bottom, open middle */
         linear-gradient(to bottom,
-            rgba(19,22,32,0.92) 0%,
-            rgba(19,22,32,0.5) 30%,
-            rgba(19,22,32,0.35) 50%,
-            rgba(19,22,32,0.55) 70%,
+            rgba(19,22,32,0.95) 0%,
+            rgba(19,22,32,0.4) 25%,
+            rgba(19,22,32,0.15) 45%,
+            rgba(19,22,32,0.15) 55%,
+            rgba(19,22,32,0.4) 75%,
             rgba(19,22,32,1) 100%
         );
 }
