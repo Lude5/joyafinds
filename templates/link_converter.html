@@ -40,20 +40,20 @@
 {% block content %}
 <div class="converter">
     <h1>Link Converter</h1>
-    <p class="converter-sub">Paste any agent link — we'll convert it to JoyaBuy.</p>
+    <p class="converter-sub">Paste any agent link — we'll convert it to JoyaGoo.</p>
     <div class="converter-input">
         <input type="text" id="linkInput" placeholder="Paste any agent link, Weidian, Taobao, or 1688 link...">
         <button onclick="convertLink()">Convert</button>
     </div>
     <div class="result" id="result">
         <div class="result-card">
-            <p class="result-label">Converted to JoyaBuy</p>
+            <p class="result-label">Converted to JoyaGoo</p>
             <p class="result-from" id="resultFrom"></p>
             <div class="result-link-wrap">
                 <span class="result-link" id="resultLink"></span>
                 <button class="result-copy" onclick="copyResult()">Copy</button>
             </div>
-            <a href="#" id="resultOpen" target="_blank" rel="noopener" class="result-open">Open in JoyaBuy</a>
+            <a href="#" id="resultOpen" target="_blank" rel="noopener" class="result-open">Open in JoyaGoo</a>
         </div>
     </div>
     <div class="error-msg" id="errorMsg"></div>
