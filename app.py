@@ -63,9 +63,11 @@ def home():
     products = get_products()
     categories = get_categories()
     import random
-    conveyor = products[:60]
-    random.shuffle(conveyor)
-    return render_template('home.html', products=products, conveyor=conveyor[:40], categories=categories)
+    shuffled = list(products)
+    random.shuffle(shuffled)
+    conveyor = shuffled[:40]
+    hero_products = shuffled[:24]
+    return render_template('home.html', products=products, conveyor=conveyor, hero_products=hero_products, categories=categories)
 
 
 @app.route('/shop')

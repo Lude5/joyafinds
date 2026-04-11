@@ -200,9 +200,9 @@
 <section class="hero-combined">
     <!-- Background: scrolling product columns -->
     {% if products %}
-    {% set col1 = products[:8] %}
-    {% set col2 = products[8:16] if products|length > 8 else products[:8] %}
-    {% set col3 = products[16:24] if products|length > 16 else products[:8] %}
+    {% set col1 = hero_products[:8] %}
+    {% set col2 = hero_products[8:16] if hero_products|length > 8 else hero_products[:8] %}
+    {% set col3 = hero_products[16:24] if hero_products|length > 16 else hero_products[:8] %}
     <div class="hero-bg-ticker">
         {% for col in [col1, col2, col3] %}
         <div class="hero-bg-col">
