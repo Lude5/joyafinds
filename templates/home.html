@@ -58,6 +58,101 @@
     margin-top: 40px; animation: fadeUp 0.4s ease 0.5s both;
 }
 
+/* Product Slides — big hero cards like finds.org */
+.slides-section {
+    padding: 0 24px 48px; max-width: 1000px; margin: 0 auto;
+    position: relative;
+}
+.slides-wrap {
+    position: relative; overflow: hidden;
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--surface);
+}
+.slides-track {
+    display: flex; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.slide {
+    min-width: 100%; display: flex; align-items: center;
+    padding: 48px; gap: 48px;
+}
+.slide-img-wrap {
+    flex: 0 0 45%; max-width: 400px;
+}
+.slide-img {
+    width: 100%; aspect-ratio: 1; object-fit: cover;
+    border-radius: 16px; background: var(--surface-2);
+}
+.slide-info { flex: 1; }
+.slide-badge {
+    display: inline-block; padding: 4px 12px;
+    background: var(--accent); color: #000;
+    font-family: var(--font-mono); font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    border-radius: 6px; margin-bottom: 16px;
+}
+.slide-name {
+    font-family: var(--font-display); font-size: 32px;
+    text-transform: uppercase; line-height: 1; margin-bottom: 12px;
+}
+.slide-price {
+    font-family: var(--font-mono); font-size: 28px; font-weight: 700;
+    color: var(--accent); margin-bottom: 24px;
+}
+.slide-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+.slide-btn-buy {
+    padding: 12px 24px; background: var(--accent); color: #000;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    border: none; border-radius: 10px; cursor: pointer;
+    transition: background 0.2s; text-decoration: none;
+    display: inline-flex; align-items: center;
+}
+.slide-btn-buy:hover { background: var(--accent-hover); }
+.slide-btn-qc {
+    padding: 12px 24px; background: transparent; color: var(--text);
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    border: 1px solid var(--border); border-radius: 10px; cursor: pointer;
+    transition: all 0.2s; text-decoration: none;
+    display: inline-flex; align-items: center;
+}
+.slide-btn-qc:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Slide navigation */
+.slides-nav {
+    position: absolute; bottom: 20px; right: 20px;
+    display: flex; gap: 8px; z-index: 5;
+}
+.slides-nav button {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--surface-2); border: 1px solid var(--border-subtle);
+    color: var(--text); font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+}
+.slides-nav button:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+
+/* Slide dots */
+.slides-dots {
+    display: flex; justify-content: center; gap: 6px;
+    padding-top: 16px;
+}
+.slides-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--surface-3); border: none; cursor: pointer;
+    transition: all 0.3s;
+}
+.slides-dot.active { background: var(--accent); width: 24px; border-radius: 4px; }
+
+@media (max-width: 768px) {
+    .slide { flex-direction: column; padding: 24px; gap: 20px; }
+    .slide-img-wrap { flex: none; max-width: 100%; width: 100%; }
+    .slide-name { font-size: 22px; }
+    .slide-price { font-size: 22px; margin-bottom: 16px; }
+    .slides-nav { bottom: auto; top: 12px; right: 12px; }
+    .slides-nav button { width: 30px; height: 30px; font-size: 13px; }
+}
+
 /* Conveyor / carousel */
 .conveyor-section { padding: 48px 0; }
 .conveyor-wrap { overflow: hidden; position: relative; }
@@ -141,6 +236,42 @@
         <p class="hero-scroll">Scroll Down</p>
     </div>
 </section>
+
+<!-- Product Slides -->
+{% if products %}
+{% set slides = products[:6] %}
+<div class="slides-section reveal">
+    <div class="slides-wrap">
+        <div class="slides-track" id="slidesTrack">
+            {% for p in slides %}
+            <div class="slide">
+                <div class="slide-img-wrap">
+                    <img class="slide-img" src="{{ p.image }}" alt="{{ p.name }}" referrerpolicy="no-referrer">
+                </div>
+                <div class="slide-info">
+                    <span class="slide-badge">Best Selling</span>
+                    <h3 class="slide-name">{{ p.name }}</h3>
+                    <div class="slide-price">${{ p.price }}</div>
+                    <div class="slide-buttons">
+                        <a href="/go/{{ p.id }}" target="_blank" rel="noopener" class="slide-btn-buy" onclick="trackClick('affiliate','buy','{{ p.id }}','{{ p.category }}','{{ p.name }}')">Buy on JoyaBuy</a>
+                        <a href="/shop?q={{ p.name }}" class="slide-btn-qc">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="slides-nav">
+            <button onclick="moveSlide(-1)">&#8249;</button>
+            <button onclick="moveSlide(1)">&#8250;</button>
+        </div>
+    </div>
+    <div class="slides-dots" id="slidesDots">
+        {% for p in slides %}
+        <button class="slides-dot {% if loop.index0 == 0 %}active{% endif %}" onclick="goSlide({{ loop.index0 }})"></button>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
 
 <!-- Ticker -->
 <div class="ticker reveal">
@@ -309,6 +440,38 @@
 {% endblock %}
 
 {% block extra_js %}
+// Product slides
+var slideIdx = 0;
+var slideCount = document.querySelectorAll('.slide').length;
+var slidesTrack = document.getElementById('slidesTrack');
+var slidesDots = document.querySelectorAll('.slides-dot');
+
+function goSlide(i) {
+    slideIdx = i;
+    if (slideIdx < 0) slideIdx = slideCount - 1;
+    if (slideIdx >= slideCount) slideIdx = 0;
+    slidesTrack.style.transform = 'translateX(-' + (slideIdx * 100) + '%)';
+    slidesDots.forEach(function(d, j) { d.classList.toggle('active', j === slideIdx); });
+}
+function moveSlide(dir) { goSlide(slideIdx + dir); }
+
+// Auto-advance slides every 5s
+if (slideCount > 1) {
+    setInterval(function() { moveSlide(1); }, 5000);
+}
+
+// Touch swipe for slides
+(function() {
+    var el = document.querySelector('.slides-wrap');
+    if (!el) return;
+    var startX = 0;
+    el.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, {passive:true});
+    el.addEventListener('touchend', function(e) {
+        var dx = e.changedTouches[0].clientX - startX;
+        if (Math.abs(dx) > 50) moveSlide(dx < 0 ? 1 : -1);
+    }, {passive:true});
+})();
+
 var convEl = document.getElementById('conv');
 initConveyor(convEl);
 function scrollConv(dir) {
