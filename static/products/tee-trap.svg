@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+<rect width="400" height="400" fill="#1a1e2e" rx="20"/>
+<g transform="translate(60,60)">
+<path d="M80,40 L40,80 L10,60 L60,0 L100,20 L180,20 L220,0 L270,60 L240,80 L200,40 Z" fill="#111111" stroke="#ff4d6d" stroke-width="2"/>
+<path d="M80,40 L70,280 L210,280 L200,40 Z" fill="#111111" stroke="#ff4d6d" stroke-width="2"/>
+<ellipse cx="140" cy="25" rx="30" ry="12" fill="#ff4d6d" opacity="0.15"/>
+<circle cx="140" cy="150" r="35" fill="#ff4d6d" opacity="0.12"/>
+<text x="140" y="158" text-anchor="middle" font-family="Arial" font-size="24" font-weight="bold" fill="#ff4d6d" opacity="0.3">LOGO</text>
+</g></svg>

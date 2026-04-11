@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+<rect width="400" height="400" fill="#1a1e2e" rx="20"/>
+<g transform="translate(60,40)">
+<path d="M80,80 L60,280 L220,280 L200,80 Z" fill="#888888" stroke="#aaaaaa" stroke-width="2"/>
+<path d="M80,80 L40,180 L20,180 L60,80 Z" fill="#888888" stroke="#aaaaaa" stroke-width="2"/>
+<path d="M200,80 L240,180 L260,180 L220,80 Z" fill="#888888" stroke="#aaaaaa" stroke-width="2"/>
+<path d="M100,60 C100,40 180,40 180,60 L180,90 L100,90 Z" fill="#888888" stroke="#aaaaaa" stroke-width="2"/>
+<ellipse cx="140" cy="55" rx="25" ry="15" fill="#aaaaaa" opacity="0.15"/>
+<line x1="140" y1="90" x2="140" y2="200" stroke="#aaaaaa" stroke-width="2" opacity="0.3"/>
+<rect x="110" y="210" width="60" height="40" rx="8" fill="#aaaaaa" opacity="0.15"/>
+</g></svg>
