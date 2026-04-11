@@ -1,176 +1,269 @@
 {% extends "base.html" %}
-{% block title %}JoyaFinds — Your Source for the Best Finds{% endblock %}
+{% block title %}JoyaFinds — The #1 Place for Your Rep Needs{% endblock %}
 
 {% block extra_css %}
-.hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-.hero-blob { position: absolute; border-radius: 50%; filter: blur(100px); pointer-events: none; will-change: transform; }
-.blob-1 { width: 600px; height: 600px; top: -15%; right: -10%; background: radial-gradient(circle, rgba(245,158,11,0.15), transparent 70%); animation: blobDrift1 18s ease-in-out infinite; }
-.blob-2 { width: 500px; height: 500px; bottom: -10%; left: -10%; background: radial-gradient(circle, rgba(245,158,11,0.1), transparent 70%); animation: blobDrift2 22s ease-in-out infinite; }
-.blob-3 { width: 400px; height: 400px; top: 40%; left: 30%; background: radial-gradient(circle, rgba(245,158,11,0.06), transparent 70%); animation: blobDrift3 15s ease-in-out infinite; }
-@keyframes blobDrift1 { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(-60px, 40px) scale(1.1); } 66% { transform: translate(30px, -50px) scale(0.95); } }
-@keyframes blobDrift2 { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(50px, -30px) scale(1.05); } 66% { transform: translate(-40px, 60px) scale(1.1); } }
-@keyframes blobDrift3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(40px, -40px) scale(1.15); } }
+/* Hero — clean, text-focused */
+.hero {
+    padding: 140px 40px 60px; text-align: center;
+    position: relative; overflow: hidden;
+}
+.hero-blob {
+    position: absolute; border-radius: 50%; filter: blur(120px);
+    pointer-events: none;
+}
+.blob-1 { width: 500px; height: 500px; top: -20%; right: -5%; background: rgba(245,158,11,0.12); }
+.blob-2 { width: 400px; height: 400px; bottom: -15%; left: -5%; background: rgba(245,158,11,0.08); }
+.hero-content { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; }
+.hero-tag {
+    display: inline-block; padding: 6px 16px; background: var(--accent-soft);
+    color: var(--accent-light); font-family: var(--font-display);
+    font-size: 11px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 2px; border-radius: 20px; margin-bottom: 24px;
+    animation: fadeUp 0.5s ease 0.2s both;
+}
+.hero-title {
+    font-family: var(--font-display); font-size: clamp(36px, 6vw, 64px);
+    font-weight: 900; line-height: 1.1; margin-bottom: 16px;
+    color: var(--text); animation: fadeUp 0.5s ease 0.3s both;
+}
+.hero-title .accent { color: var(--accent); }
+.hero-sub {
+    font-size: 16px; color: var(--text-secondary); line-height: 1.7;
+    max-width: 500px; margin: 0 auto 32px;
+    animation: fadeUp 0.5s ease 0.4s both;
+}
+.hero-search {
+    max-width: 520px; margin: 0 auto 24px; display: flex;
+    background: var(--surface); border: 2px solid var(--border);
+    border-radius: 32px; overflow: hidden; transition: border-color 0.3s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    animation: fadeUp 0.5s ease 0.5s both;
+}
+.hero-search:focus-within { border-color: var(--accent); box-shadow: 0 4px 20px var(--accent-dim); }
+.hero-search input {
+    flex: 1; border: none; outline: none; padding: 16px 24px;
+    font-size: 14px; background: none; color: var(--text); font-family: var(--font-body);
+}
+.hero-search input::placeholder { color: var(--text-muted); }
+.hero-search button {
+    padding: 0 24px; background: var(--accent); border: none;
+    color: #fff; font-size: 14px; cursor: pointer; font-weight: 700;
+    font-family: var(--font-display); transition: background 0.2s;
+    border-radius: 0 30px 30px 0;
+}
+.hero-search button:hover { background: var(--accent-light); }
+.hero-cta {
+    display: flex; gap: 12px; justify-content: center;
+    animation: fadeUp 0.5s ease 0.6s both;
+}
 
-.hero-grid { position: absolute; inset: 0; pointer-events: none; opacity: 0.04; background-image: linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px); background-size: 80px 80px; }
+/* Category strip — horizontal scrollable */
+.cat-strip {
+    display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+    padding: 20px 40px; max-width: 900px; margin: 0 auto;
+}
+.cat-chip {
+    padding: 10px 22px; background: var(--surface); border: 2px solid var(--border);
+    border-radius: 24px; font-family: var(--font-display);
+    font-size: 12px; font-weight: 800; color: var(--text-secondary);
+    transition: all 0.25s; cursor: pointer; text-transform: uppercase;
+    letter-spacing: 0.5px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.cat-chip:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 12px var(--accent-dim); }
 
-.hero-content { position: relative; z-index: 2; text-align: center; padding: 0 40px; max-width: 800px; }
-.hero-label { font-size: 10px; letter-spacing: 6px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 32px; animation: fadeUp 0.6s ease 0.3s both; }
-.hero-title { font-family: var(--font-display); font-size: clamp(48px, 8vw, 88px); font-weight: 900; line-height: 1.05; margin-bottom: 24px; animation: fadeUp 0.6s ease 0.4s both; }
-.hero-title .thin { font-weight: 700; color: var(--accent); }
-.hero-sub { font-size: 16px; color: var(--text-secondary); line-height: 1.7; max-width: 480px; margin: 0 auto 40px; animation: fadeUp 0.6s ease 0.5s both; }
-.hero-cta { display: flex; gap: 16px; justify-content: center; animation: fadeUp 0.6s ease 0.6s both; }
-.hero-scroll { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); font-size: 10px; letter-spacing: 4px; color: var(--text-muted); animation: float 3s ease-in-out infinite; }
-@keyframes float { 0%,100% { transform:translateX(-50%) translateY(0); } 50% { transform:translateX(-50%) translateY(8px); } }
+/* Product cards — always visible buy button */
+.product-card {
+    background: var(--surface); border: 2px solid var(--border);
+    border-radius: 16px; overflow: hidden; transition: all 0.3s;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04); display: block;
+    color: inherit; text-decoration: none;
+}
+.product-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 12px 32px var(--accent-dim); }
+.product-card-img {
+    width: 100%; aspect-ratio: 1; object-fit: cover;
+    background: #f0f0f4; transition: transform 0.5s ease;
+}
+.product-card:hover .product-card-img { transform: scale(1.04); }
+.product-card-img-wrap { overflow: hidden; position: relative; }
+.product-card-badge {
+    position: absolute; top: 10px; left: 10px;
+    padding: 4px 10px; background: var(--accent); color: #fff;
+    font-family: var(--font-display); font-size: 9px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1px; border-radius: 8px;
+}
+.product-card-body { padding: 14px 16px; }
+.product-card-name {
+    font-family: var(--font-display); font-size: 13px; font-weight: 800;
+    margin-bottom: 4px; line-height: 1.3;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.product-card-seller { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+.product-card-row { display: flex; align-items: center; justify-content: space-between; }
+.product-card-price {
+    font-family: var(--font-display); font-size: 18px; font-weight: 900;
+    color: var(--accent);
+}
+.product-card-buy {
+    padding: 8px 16px; background: var(--accent); color: #fff;
+    font-family: var(--font-display); font-size: 10px; font-weight: 800;
+    border: none; border-radius: 10px; cursor: pointer;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    box-shadow: 0 2px 0 var(--accent-shadow);
+    transition: all 0.2s;
+}
+.product-card-buy:hover { transform: translateY(-1px); box-shadow: 0 4px 0 var(--accent-shadow); }
 
-.marquee-wrap { padding: 0; }
+.products-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 24px;
+}
 
-.conveyor-section { padding: 60px 0; }
-.conveyor-wrap { overflow: hidden; position: relative; }
-.conveyor-track { display: flex; gap: 24px; width: max-content; cursor: grab; user-select: none; }
-.conveyor-track:active { cursor: grabbing; }
-.conveyor-fade-l, .conveyor-fade-r { position: absolute; top: 0; bottom: 0; width: 120px; z-index: 5; pointer-events: none; }
-.conveyor-fade-l { left: 0; background: linear-gradient(90deg, #fafafa, transparent); }
-.conveyor-fade-r { right: 0; background: linear-gradient(-90deg, #fafafa, transparent); }
-.conv-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 10; width: 48px; height: 48px; border-radius: 16px; background: var(--surface); border: 2px solid var(--border); color: var(--text); font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-.conv-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); transform: translateY(-50%) scale(1.1); }
-.conv-btn-l { left: 16px; }
-.conv-btn-r { right: 16px; }
-.conveyor-track .product-item { flex: 0 0 240px; }
+/* Section headers */
+.sec-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+}
+.sec-title {
+    font-family: var(--font-display); font-size: 24px; font-weight: 900;
+}
+.sec-link {
+    font-family: var(--font-display); font-size: 12px; font-weight: 800;
+    color: var(--accent); text-transform: uppercase; letter-spacing: 1px;
+    transition: opacity 0.2s;
+}
+.sec-link:hover { opacity: 0.7; }
 
-.cat-header { padding: 60px 40px 40px; max-width: 1300px; margin: 0 auto; }
-.cat-label { font-family: var(--font-display); font-size: clamp(32px, 5vw, 52px); font-weight: 900; color: var(--text); }
-.cat-label .num { font-size: 13px; font-weight: 800; color: var(--accent); vertical-align: super; margin-right: 8px; background: var(--accent-soft); padding: 2px 8px; border-radius: 8px; }
-.cat-view { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); transition: color 0.2s; margin-top: 8px; display: inline-block; }
-.cat-view:hover { color: var(--accent-light); }
+/* Divider */
+.divider {
+    border: none; border-top: 1px solid var(--border);
+    margin: 0 40px; max-width: 1220px;
+}
 
 @media (max-width: 768px) {
-    .hero-title { letter-spacing: -1px; }
+    .hero { padding: 120px 20px 40px; }
+    .hero-title { letter-spacing: -0.5px; }
     .hero-cta { flex-direction: column; align-items: center; }
-    .cat-header { padding: 40px 20px 24px; }
-    .conveyor-track .product-item { flex: 0 0 180px; }
-    .conv-btn { width: 36px; height: 36px; font-size: 14px; }
-    .conv-btn-l { left: 8px; }
-    .conv-btn-r { right: 8px; }
-    .product-grid { gap: 24px; }
+    .cat-strip { padding: 16px 16px; gap: 6px; }
+    .cat-chip { padding: 8px 14px; font-size: 10px; }
+    .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .product-card-body { padding: 10px 12px; }
+    .product-card-name { font-size: 11px; }
+    .product-card-price { font-size: 15px; }
+    .product-card-buy { padding: 6px 10px; font-size: 9px; }
+    .sec-header { padding: 0; }
 }
 {% endblock %}
 
 {% block content %}
+<!-- Hero -->
 <section class="hero">
     <div class="hero-blob blob-1"></div>
     <div class="hero-blob blob-2"></div>
-    <div class="hero-blob blob-3"></div>
-    <div class="hero-grid"></div>
     <div class="hero-content">
-        <p class="hero-label">Curated for you</p>
-        <h1 class="hero-title">The Best<br><span class="thin">JoyaBuy Finds</span></h1>
-        <p class="hero-sub">Handpicked products at the best prices. Updated daily.</p>
+        <span class="hero-tag">The #1 Place</span>
+        <h1 class="hero-title">For Your<br><span class="accent">JoyaBuy</span> Finds</h1>
+        <p class="hero-sub">Curated products at the best prices. Search, browse, and buy — all in one place.</p>
+        <form class="hero-search" action="/shop" method="get">
+            <input type="text" name="q" placeholder="Search products...">
+            <button type="submit">Search</button>
+        </form>
         <div class="hero-cta">
-            <a href="/shop" class="btn btn-primary">Shop Collection</a>
-            <a href="/shop" class="btn btn-outline">Browse Categories</a>
+            <a href="/shop" class="btn btn-primary" style="padding:12px 24px;font-size:13px;">Browse All</a>
+            <a href="/link-converter" class="btn btn-outline" style="padding:12px 24px;font-size:13px;">Link Converter</a>
         </div>
     </div>
-    <div class="hero-scroll">Scroll</div>
 </section>
 
-<div class="marquee-wrap reveal">
-    <div class="marquee">
-        <div class="marquee-inner">
-            <span class="accent">Curated</span><span>Daily Drops</span><span class="accent">JoyaFinds</span><span>Budget Luxury</span><span class="accent">Best Prices</span><span>Trusted Sellers</span>
-            <span class="accent">Curated</span><span>Daily Drops</span><span class="accent">JoyaFinds</span><span>Budget Luxury</span><span class="accent">Best Prices</span><span>Trusted Sellers</span>
-        </div>
-    </div>
+<!-- Category strip -->
+<div class="cat-strip reveal">
+    <a href="/shop?category=shoes" class="cat-chip">Shoes</a>
+    <a href="/shop?category=shirts" class="cat-chip">Shirts</a>
+    <a href="/shop?category=hoodies" class="cat-chip">Hoodies</a>
+    <a href="/shop?category=jackets" class="cat-chip">Jackets</a>
+    <a href="/shop?category=pants" class="cat-chip">Pants</a>
+    <a href="/shop?category=accessories" class="cat-chip">Accessories</a>
+    <a href="/shop?category=bags" class="cat-chip">Bags</a>
+    <a href="/shop?category=tech" class="cat-chip">Tech</a>
+    <a href="/shop?category=womens" class="cat-chip">Womens</a>
 </div>
 
-<div class="section reveal" style="padding-top:48px;padding-bottom:0;">
-    <div class="trust-row">
-        <div class="trust-item"><strong>Curated</strong>Handpicked Products</div>
-        <div class="trust-item"><strong>Daily</strong>New Drops</div>
-        <div class="trust-item"><strong>Verified</strong>Trusted Sellers</div>
-        <div class="trust-item"><strong>Best</strong>Prices Guaranteed</div>
-    </div>
-</div>
+<hr class="divider">
 
+<!-- Trending / Best Selling -->
 {% if products %}
-<div class="conveyor-section reveal">
-    <div class="section" style="padding-bottom:24px;">
-        <p class="section-label">Fresh Drops</p>
-        <h2 class="section-title" style="font-size:28px;">Newest Finds</h2>
+{% set trending = products|selectattr('category', 'equalto', 'trending')|list %}
+{% set featured = trending[:8] if trending else products[:8] %}
+{% if featured %}
+<div class="section reveal" style="padding-bottom:40px;">
+    <div class="sec-header">
+        <h2 class="sec-title">Best Selling</h2>
+        <a href="/shop?category=trending" class="sec-link">View All &rarr;</a>
     </div>
-    <div class="conveyor-wrap">
-        <div class="conveyor-fade-l"></div>
-        <div class="conveyor-fade-r"></div>
-        <button class="conv-btn conv-btn-l" onclick="scrollConv(-1)" aria-label="Scroll left">&#8249;</button>
-        <button class="conv-btn conv-btn-r" onclick="scrollConv(1)" aria-label="Scroll right">&#8250;</button>
-        <div class="conveyor-track" id="conv">
-            {% for p in conveyor %}
-            <a href="/go/{{ p.id }}" target="_blank" rel="noopener" class="product-item" onclick="trackClick('affiliate','buy','{{ p.id }}','{{ p.category }}','{{ p.name }}')">
-                <div class="product-image-wrap">
-                    <div class="product-glow"></div>
-                    <img class="product-image" src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" referrerpolicy="no-referrer">
-                    <div class="product-buy-overlay">
-                        <span class="product-buy-btn">Buy on JoyaBuy</span>
-                    </div>
+    <div class="products-grid">
+        {% for p in featured %}
+        <a href="/go/{{ p.id }}" target="_blank" rel="noopener" class="product-card" onclick="trackClick('affiliate','buy','{{ p.id }}','{{ p.category }}','{{ p.name }}')">
+            <div class="product-card-img-wrap">
+                <img class="product-card-img" src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" referrerpolicy="no-referrer">
+                <span class="product-card-badge">Best Selling</span>
+            </div>
+            <div class="product-card-body">
+                <div class="product-card-name">{{ p.name }}</div>
+                {% if p.seller %}<div class="product-card-seller">{{ p.seller }}</div>{% endif %}
+                <div class="product-card-row">
+                    <span class="product-card-price">${{ p.price }}</span>
+                    <span class="product-card-buy">Buy on JoyaBuy</span>
                 </div>
-                <div class="product-name">{{ p.name }}</div>
-                <div class="product-price">${{ p.price }}</div>
-            </a>
-            {% endfor %}
-            {% for p in conveyor %}
-            <a href="/go/{{ p.id }}" target="_blank" rel="noopener" class="product-item">
-                <div class="product-image-wrap">
-                    <img class="product-image" src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" referrerpolicy="no-referrer">
-                </div>
-                <div class="product-name">{{ p.name }}</div>
-                <div class="product-price">${{ p.price }}</div>
-            </a>
-            {% endfor %}
-        </div>
+            </div>
+        </a>
+        {% endfor %}
     </div>
 </div>
 {% endif %}
 
+<!-- Category sections -->
 {% set cats = [
-    ('trending', 'Trending', '01'),
-    ('shoes', 'Shoes', '02'),
-    ('hoodies', 'Hoodies', '03'),
-    ('shirts', 'Shirts', '04'),
-    ('pants', 'Pants', '05'),
-    ('jackets', 'Jackets', '06'),
-    ('accessories', 'Accessories', '07'),
-    ('bags', 'Bags', '08'),
-    ('tech', 'Tech', '09'),
-    ('womens', 'Womens', '10'),
+    ('shoes', 'Shoes'),
+    ('hoodies', 'Hoodies'),
+    ('shirts', 'Shirts'),
+    ('jackets', 'Jackets'),
+    ('pants', 'Pants'),
+    ('accessories', 'Accessories'),
+    ('bags', 'Bags'),
 ] %}
 
-{% for slug, name, num in cats %}
+{% for slug, name in cats %}
 {% set cp = products|selectattr('category', 'equalto', slug)|list %}
 {% if cp %}
-<div class="cat-header reveal">
-    <h2 class="cat-label"><span class="num">{{ num }}</span>{{ name }}</h2>
-    <a href="/shop?category={{ slug }}" class="cat-view">View All &rarr;</a>
-</div>
-<div class="section reveal" style="padding-top:0;">
-    <div class="product-grid">
+<hr class="divider">
+<div class="section reveal" style="padding-top:40px;padding-bottom:40px;">
+    <div class="sec-header">
+        <h2 class="sec-title">{{ name }}</h2>
+        <a href="/shop?category={{ slug }}" class="sec-link">View All ({{ cp|length }}) &rarr;</a>
+    </div>
+    <div class="products-grid">
         {% for p in cp[:4] %}
-        <a href="/go/{{ p.id }}" target="_blank" rel="noopener" class="product-item reveal reveal-d{{ loop.index0 }}" onclick="trackClick('affiliate','buy','{{ p.id }}','{{ p.category }}','{{ p.name }}')">
-            <div class="product-image-wrap">
-                <div class="product-glow"></div>
-                <img class="product-image" src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" referrerpolicy="no-referrer">
-                <div class="product-buy-overlay">
-                    <span class="product-buy-btn">Buy on JoyaBuy</span>
+        <a href="/go/{{ p.id }}" target="_blank" rel="noopener" class="product-card" onclick="trackClick('affiliate','buy','{{ p.id }}','{{ p.category }}','{{ p.name }}')">
+            <div class="product-card-img-wrap">
+                <img class="product-card-img" src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" referrerpolicy="no-referrer">
+            </div>
+            <div class="product-card-body">
+                <div class="product-card-name">{{ p.name }}</div>
+                {% if p.seller %}<div class="product-card-seller">{{ p.seller }}</div>{% endif %}
+                <div class="product-card-row">
+                    <span class="product-card-price">${{ p.price }}</span>
+                    <span class="product-card-buy">Buy on JoyaBuy</span>
                 </div>
             </div>
-            <div class="product-name">{{ p.name }}</div>
-            {% if p.seller %}<div class="product-brand">{{ p.seller }}</div>{% endif %}
-            <div class="product-price">${{ p.price }}</div>
         </a>
         {% endfor %}
     </div>
 </div>
 {% endif %}
 {% endfor %}
+{% endif %}
 
+<!-- Stats -->
+<hr class="divider">
 <div class="stat-row reveal">
     <div class="stat">
         <div class="stat-num" data-count="1000" data-suffix="+">0</div>
@@ -186,24 +279,12 @@
     </div>
 </div>
 
+<!-- CTA -->
 <section class="cta-section reveal">
     <div class="cta-glow"></div>
     <p class="section-label" style="position:relative;">Start Shopping</p>
     <h2>Join JoyaBuy</h2>
-    <p>Sign up and get exclusive deals, coupons, and the lowest shipping rates. Trusted by thousands.</p>
+    <p>Sign up and get exclusive deals, coupons, and the lowest shipping rates.</p>
     <a href="#" class="btn btn-primary" style="position:relative;" onclick="trackClick('signup','cta','','')">Sign Up to JoyaBuy</a>
 </section>
-{% endblock %}
-
-{% block extra_js %}
-var convEl = document.getElementById('conv');
-initConveyor(convEl);
-function scrollConv(dir) {
-    if (!convEl || !convEl._convPos) return;
-    var h = convEl.scrollWidth / 2;
-    var target = convEl._convPos.p + dir * 260 * 3;
-    if (target < 0) target += h;
-    if (target >= h) target -= h;
-    convEl._convPos.target = target;
-}
 {% endblock %}
