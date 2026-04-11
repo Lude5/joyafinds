@@ -58,6 +58,33 @@
     margin-top: 40px; animation: fadeUp 0.4s ease 0.5s both;
 }
 
+/* Conveyor / carousel */
+.conveyor-section { padding: 48px 0; }
+.conveyor-wrap { overflow: hidden; position: relative; }
+.conveyor-track { display: flex; gap: 16px; width: max-content; cursor: grab; user-select: none; }
+.conveyor-track:active { cursor: grabbing; }
+.conveyor-fade-l, .conveyor-fade-r { position: absolute; top: 0; bottom: 0; width: 100px; z-index: 5; pointer-events: none; }
+.conveyor-fade-l { left: 0; background: linear-gradient(90deg, var(--bg), transparent); }
+.conveyor-fade-r { right: 0; background: linear-gradient(-90deg, var(--bg), transparent); }
+.conv-btn {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    z-index: 10; width: 40px; height: 40px; border-radius: 10px;
+    background: var(--surface-2); border: 1px solid var(--border-subtle);
+    color: var(--text); font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+}
+.conv-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+.conv-btn-l { left: 12px; }
+.conv-btn-r { right: 12px; }
+.conveyor-track .product-card { flex: 0 0 220px; }
+@media (max-width: 768px) {
+    .conveyor-track .product-card { flex: 0 0 170px; }
+    .conv-btn { width: 32px; height: 32px; font-size: 14px; }
+    .conv-btn-l { left: 6px; }
+    .conv-btn-r { right: 6px; }
+}
+
 /* Category tabs — finds.org filterbar style */
 .cat-tabs {
     display: flex; gap: 0; justify-content: center; padding: 0 24px;
@@ -122,6 +149,54 @@
         <span class="accent">Curated</span><span>Daily Drops</span><span class="accent">JoyaGoo</span><span>Best Prices</span><span class="accent">Verified</span><span>Trusted Sellers</span>
     </div>
 </div>
+
+<!-- Conveyor / Carousel -->
+{% if conveyor %}
+<div class="conveyor-section reveal">
+    <div class="section" style="padding-bottom:16px;padding-top:0;">
+        <div class="sec-header">
+            <h2 class="sec-title">Latest Drops</h2>
+            <a href="/shop" class="sec-link">View All &rarr;</a>
+        </div>
+    </div>
+    <div class="conveyor-wrap">
+        <div class="conveyor-fade-l"></div>
+        <div class="conveyor-fade-r"></div>
+        <button class="conv-btn conv-btn-l" onclick="scrollConv(-1)">&#8249;</button>
+        <button class="conv-btn conv-btn-r" onclick="scrollConv(1)">&#8250;</button>
+        <div class="conveyor-track" id="conv">
+            {% for p in conveyor %}
+            <a href="/go/{{ p.id }}" target="_blank" rel="noopener" class="product-card" onclick="trackClick('affiliate','buy','{{ p.id }}','{{ p.category }}','{{ p.name }}')">
+                <div class="product-card-img-wrap">
+                    <img class="product-card-img" src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" referrerpolicy="no-referrer">
+                </div>
+                <div class="product-card-body">
+                    <div class="product-card-name">{{ p.name }}</div>
+                    <div class="product-card-row">
+                        <span class="product-card-price">${{ p.price }}</span>
+                        <span class="product-card-buy">Buy on JoyaBuy</span>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+            {% for p in conveyor %}
+            <a href="/go/{{ p.id }}" target="_blank" rel="noopener" class="product-card">
+                <div class="product-card-img-wrap">
+                    <img class="product-card-img" src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" referrerpolicy="no-referrer">
+                </div>
+                <div class="product-card-body">
+                    <div class="product-card-name">{{ p.name }}</div>
+                    <div class="product-card-row">
+                        <span class="product-card-price">${{ p.price }}</span>
+                        <span class="product-card-buy">Buy on JoyaBuy</span>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
 
 <!-- Category tabs -->
 <div class="cat-tabs reveal">
@@ -231,4 +306,17 @@
     <p>Sign up for exclusive deals, coupons, and the lowest shipping rates.</p>
     <a href="#" class="btn btn-primary" style="position:relative;" onclick="trackClick('signup','cta','','')">Sign Up to JoyaBuy</a>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+var convEl = document.getElementById('conv');
+initConveyor(convEl);
+function scrollConv(dir) {
+    if (!convEl || !convEl._convPos) return;
+    var h = convEl.scrollWidth / 2;
+    var target = convEl._convPos.p + dir * 240 * 3;
+    if (target < 0) target += h;
+    if (target >= h) target -= h;
+    convEl._convPos.target = target;
+}
 {% endblock %}

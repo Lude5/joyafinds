@@ -420,6 +420,28 @@
         fetch('/api/track-pageview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({page:window.location.pathname})}).catch(function(){});
         function trackClick(t,el,pid,cat,name){fetch('/api/click',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({element_type:el,product_id:pid||'',product_name:name||'',category:cat||'',page:window.location.pathname})}).catch(function(){});}
 
+        function initConveyor(el){
+            if(!el)return;
+            var pos={p:0,target:null};el._convPos=pos;
+            var p=0,s=0.7,t=0.7,h=el.scrollWidth/2;
+            var dragging=false,startX=0,startP=0;
+            el.addEventListener('mouseenter',function(){t=0;});
+            el.addEventListener('mouseleave',function(){if(!dragging)t=0.7;});
+            el.addEventListener('mousedown',function(e){dragging=true;startX=e.clientX;startP=p;t=0;e.preventDefault();});
+            window.addEventListener('mousemove',function(e){if(!dragging)return;var dx=e.clientX-startX;p=startP-dx;if(p<0)p+=h;if(p>=h)p-=h;});
+            window.addEventListener('mouseup',function(){if(dragging){dragging=false;t=0.7;}});
+            el.addEventListener('touchstart',function(e){dragging=true;startX=e.touches[0].clientX;startP=p;t=0;},{passive:true});
+            el.addEventListener('touchmove',function(e){if(!dragging)return;var dx=e.touches[0].clientX-startX;p=startP-dx;if(p<0)p+=h;if(p>=h)p-=h;},{passive:true});
+            el.addEventListener('touchend',function(){dragging=false;setTimeout(function(){t=0.7;},2000);});
+            function step(){
+                if(pos.target!==null){var diff=pos.target-p;if(Math.abs(diff)<1){p=pos.target;pos.target=null;}else{p+=diff*0.08;}}
+                else{s+=(t-s)*0.015;p+=s;}
+                if(p>=h)p-=h;if(p<0)p+=h;pos.p=p;
+                el.style.transform='translateX('+(-p)+'px)';requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+
         {% block extra_js %}{% endblock %}
     </script>
 </body>
