@@ -2,48 +2,47 @@
 {% block title %}JoyaFinds — Link Converter{% endblock %}
 
 {% block extra_css %}
-.converter { max-width: 700px; margin: 0 auto; padding: 120px 20px 80px; }
-.converter h1 { font-family: var(--font-display); font-size: 32px; font-weight: 900; text-align: center; margin-bottom: 8px; }
-.converter-sub { text-align: center; color: var(--text-secondary); font-size: 14px; margin-bottom: 32px; }
+.converter { max-width: 600px; margin: 0 auto; padding: 120px 24px 80px; }
+.converter h1 { font-family: var(--font-display); font-size: 36px; text-transform: uppercase; text-align: center; margin-bottom: 8px; }
+.converter-sub { text-align: center; color: var(--text-secondary); font-size: 13px; margin-bottom: 32px; }
 .converter-input { display: flex; gap: 8px; margin-bottom: 24px; }
-.converter-input input { flex: 1; padding: 16px 20px; background: var(--surface); border: 2px solid var(--border); border-radius: var(--bubble); color: var(--text); font-size: 14px; outline: none; font-family: var(--font-body); transition: border-color 0.2s; }
-.converter-input input:focus { border-color: var(--accent); }
+.converter-input input { flex: 1; padding: 14px 18px; background: var(--surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); color: var(--text); font-size: 13px; outline: none; font-family: var(--font-body); transition: border-color 0.2s; }
+.converter-input input:focus { border-color: var(--border); }
 .converter-input input::placeholder { color: var(--text-muted); }
-.converter-input button { padding: 16px 28px; background: var(--accent); color: #fff; border: none; border-radius: var(--bubble); font-family: var(--font-display); font-size: 14px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 0 var(--accent-shadow); transition: all 0.2s; }
-.converter-input button:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--accent-shadow); }
-.converter-input button:active { transform: translateY(1px); box-shadow: 0 2px 0 var(--accent-shadow); }
+.converter-input button { padding: 14px 24px; background: var(--accent); color: #000; border: none; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: background 0.2s; }
+.converter-input button:hover { background: var(--accent-hover); }
 
 .result { display: none; }
 .result.active { display: block; }
-.result-card { background: var(--surface); border: 2px solid var(--accent); border-radius: var(--bubble-lg); padding: 24px; text-align: center; }
-.result-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; font-weight: 600; }
-.result-from { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; word-break: break-all; }
+.result-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; }
+.result-label { font-family: var(--font-mono); font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+.result-from { font-size: 12px; color: var(--text-secondary); margin-bottom: 16px; word-break: break-all; }
 .result-from span { color: var(--accent); font-weight: 700; }
-.result-link-wrap { display: flex; gap: 8px; background: rgba(0,0,0,0.3); border-radius: 14px; padding: 4px 4px 4px 16px; align-items: center; margin-bottom: 16px; }
-.result-link { flex: 1; font-size: 12px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; }
-.result-copy { padding: 10px 20px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-family: var(--font-display); font-size: 12px; font-weight: 800; cursor: pointer; box-shadow: 0 3px 0 var(--accent-shadow); transition: all 0.2s; flex-shrink: 0; }
-.result-copy:hover { transform: translateY(-1px); }
-.result-copy.copied { background: #22c55e; box-shadow: 0 3px 0 #16a34a; }
-.result-open { display: inline-flex; padding: 12px 28px; background: var(--accent); color: #fff; border: none; border-radius: var(--bubble); font-family: var(--font-display); font-size: 14px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 0 var(--accent-shadow); transition: all 0.2s; text-decoration: none; }
-.result-open:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--accent-shadow); }
+.result-link-wrap { display: flex; gap: 8px; background: rgba(0,0,0,0.4); border-radius: 8px; padding: 4px 4px 4px 14px; align-items: center; margin-bottom: 16px; }
+.result-link { flex: 1; font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; }
+.result-copy { padding: 10px 18px; background: var(--accent); color: #000; border: none; border-radius: 8px; font-family: var(--font-mono); font-size: 10px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: background 0.2s; flex-shrink: 0; }
+.result-copy:hover { background: var(--accent-hover); }
+.result-copy.copied { background: #22c55e; }
+.result-open { display: inline-flex; padding: 12px 24px; background: var(--accent); color: #000; border: none; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: background 0.2s; text-decoration: none; }
+.result-open:hover { background: var(--accent-hover); }
 
-.error-msg { display: none; text-align: center; color: var(--accent); font-size: 13px; font-weight: 600; margin-top: 16px; padding: 12px; background: var(--accent-dim); border-radius: 12px; }
+.error-msg { display: none; text-align: center; color: var(--accent); font-family: var(--font-mono); font-size: 11px; margin-top: 16px; padding: 12px; background: var(--accent-dim); border-radius: 8px; text-transform: uppercase; letter-spacing: 1px; }
 .error-msg.active { display: block; }
 
-.supported { margin-top: 40px; text-align: center; }
-.supported h3 { font-family: var(--font-display); font-size: 14px; font-weight: 800; color: var(--text-muted); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 2px; }
-.supported-grid { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-.supported-tag { padding: 8px 16px; background: var(--surface); border: 2px solid var(--border); border-radius: 14px; font-family: var(--font-display); font-size: 12px; font-weight: 700; color: var(--text-secondary); }
+.supported { margin-top: 48px; text-align: center; }
+.supported h3 { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 3px; }
+.supported-grid { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+.supported-tag { padding: 6px 14px; background: var(--surface); border: 1px solid var(--border-subtle); border-radius: 8px; font-family: var(--font-mono); font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-@media (max-width: 768px) { .converter { padding: 100px 16px 60px; } .converter h1 { font-size: 24px; } .converter-input { flex-direction: column; } }
+@media (max-width: 768px) { .converter { padding: 90px 16px 60px; } .converter h1 { font-size: 28px; } .converter-input { flex-direction: column; } }
 {% endblock %}
 
 {% block content %}
 <div class="converter">
-    <h1>Switch to JoyaBuy</h1>
-    <p class="converter-sub">Paste any agent link — we'll convert it to JoyaBuy for you.</p>
+    <h1>Link Converter</h1>
+    <p class="converter-sub">Paste any agent link — we'll convert it to JoyaBuy.</p>
     <div class="converter-input">
-        <input type="text" id="linkInput" placeholder="Paste any agent link, Weidian, Taobao, or 1688 link..." aria-label="Product link">
+        <input type="text" id="linkInput" placeholder="Paste any agent link, Weidian, Taobao, or 1688 link...">
         <button onclick="convertLink()">Convert</button>
     </div>
     <div class="result" id="result">
@@ -71,7 +70,6 @@
             <span class="supported-tag">HagoBuy</span>
             <span class="supported-tag">Hoobuy</span>
             <span class="supported-tag">Mulebuy</span>
-            <span class="supported-tag">LoveGoBuy</span>
             <span class="supported-tag">PandaBuy</span>
             <span class="supported-tag">Weidian</span>
             <span class="supported-tag">Taobao</span>
@@ -95,7 +93,6 @@ function extractProductUrl(input) {
     } catch(e) {}
     return null;
 }
-
 function convertLink() {
     var input = document.getElementById('linkInput').value.trim();
     if (!input) return;
@@ -103,28 +100,24 @@ function convertLink() {
     document.getElementById('result').classList.remove('active');
     document.getElementById('errorMsg').classList.remove('active');
     if (!extracted) {
-        document.getElementById('errorMsg').textContent = 'Could not extract product URL. Make sure you paste a valid agent link or Weidian/Taobao/1688 URL.';
+        document.getElementById('errorMsg').textContent = 'Could not extract product URL.';
         document.getElementById('errorMsg').classList.add('active');
         return;
     }
     var joyaUrl = 'https://joyabuy.com/product/?url=' + encodeURIComponent(extracted.product);
-    var fromText = extracted.agent === 'direct' ? 'Direct link' : 'Converted from <span>' + extracted.agent + '</span>';
-    document.getElementById('resultFrom').innerHTML = fromText;
+    document.getElementById('resultFrom').innerHTML = extracted.agent === 'direct' ? 'Direct link' : 'Converted from <span>' + extracted.agent + '</span>';
     document.getElementById('resultLink').textContent = joyaUrl;
     document.getElementById('resultOpen').href = joyaUrl;
     document.getElementById('result').classList.add('active');
     trackClick('tool', 'link_converter', '', '', 'convert_to_joyabuy');
 }
-
 function copyResult() {
     var link = document.getElementById('resultLink').textContent;
     navigator.clipboard.writeText(link).then(function() {
         var btn = document.querySelector('.result-copy');
-        btn.textContent = 'Copied!';
-        btn.classList.add('copied');
+        btn.textContent = 'Copied!'; btn.classList.add('copied');
         setTimeout(function() { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
     });
 }
-
 document.getElementById('linkInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') convertLink(); });
 {% endblock %}
