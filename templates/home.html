@@ -51,23 +51,22 @@
 .hero-overlay {
     position: absolute; inset: 0; z-index: 1; pointer-events: none;
     background:
-        /* Horizontal fade: solid dark on sides, transparent center strip */
+        /* Horizontal fade: solid sides, subtle center */
         linear-gradient(to right,
             rgba(19,22,32,1) 0%,
-            rgba(19,22,32,0.85) 15%,
-            rgba(19,22,32,0.3) 35%,
-            rgba(19,22,32,0.15) 50%,
-            rgba(19,22,32,0.3) 65%,
-            rgba(19,22,32,0.85) 85%,
+            rgba(19,22,32,0.92) 20%,
+            rgba(19,22,32,0.78) 40%,
+            rgba(19,22,32,0.72) 50%,
+            rgba(19,22,32,0.78) 60%,
+            rgba(19,22,32,0.92) 80%,
             rgba(19,22,32,1) 100%
         ),
-        /* Vertical fade: solid top/bottom, open middle */
+        /* Vertical fade: solid top/bottom */
         linear-gradient(to bottom,
             rgba(19,22,32,0.95) 0%,
-            rgba(19,22,32,0.4) 25%,
-            rgba(19,22,32,0.15) 45%,
-            rgba(19,22,32,0.15) 55%,
-            rgba(19,22,32,0.4) 75%,
+            rgba(19,22,32,0.7) 30%,
+            rgba(19,22,32,0.65) 50%,
+            rgba(19,22,32,0.7) 70%,
             rgba(19,22,32,1) 100%
         );
 }
