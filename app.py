@@ -371,7 +371,7 @@ def admin_rename_products():
     def run_rename():
         import base64, re as _re, time as _time, traceback, requests as _requests
         from datetime import datetime
-        GEMINI_KEY = 'AIzaSyAcjRKPAxN8pCDom_gBkOFuDTceKnhOeN4'
+        GEMINI_KEY = os.environ.get('GEMINI_API_KEY', '')
         MODEL = 'gemini-2.5-flash'
         PROMPT = '''What is this fashion product? Return ONLY: Brand Model Colorway. Max 6 words. No quotes.
 RULES: Use real product names people search for. Include exact color. Read logos carefully.
