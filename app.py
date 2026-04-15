@@ -358,6 +358,97 @@ def admin_download_backup():
     return send_file(path, as_attachment=True)
 
 
+_rename_progress = {'running': False, 'done': 0, 'failed': 0, 'total': 0, 'last_name': '', 'started': '', 'demand_waits': 0}
+
+
+@app.route('/admin/rename-products', methods=['POST'])
+def admin_rename_products():
+    if not is_admin():
+        return jsonify({'error': 'Unauthorized'}), 401
+    if _rename_progress['running']:
+        return jsonify({'error': 'Already running', 'progress': _rename_progress}), 400
+    import threading
+    def run_rename():
+        import base64, re as _re, time as _time, traceback, requests as _requests
+        from datetime import datetime
+        GEMINI_KEY = 'AIzaSyAcjRKPAxN8pCDom_gBkOFuDTceKnhOeN4'
+        MODEL = 'gemini-2.5-flash'
+        PROMPT = '''What is this fashion product? Return ONLY: Brand Model Colorway. Max 6 words. No quotes.
+RULES: Use real product names people search for. Include exact color. Read logos carefully.
+LV Skate (chunky) ≠ LV Archlight (wave sole) ≠ LV Trainer (high-top). Denim Tears (wreath) ≠ Gallery Dept (splatter).
+Examples: Louis Vuitton Trainer White Green, Chrome Hearts Matty Boy Tee Black, Jordan 4 Off-White Sail'''
+
+        _rename_progress['running'] = True
+        _rename_progress['done'] = 0
+        _rename_progress['failed'] = 0
+        _rename_progress['demand_waits'] = 0
+        _rename_progress['started'] = datetime.utcnow().isoformat()
+
+        try:
+            products = get_products()
+            _rename_progress['total'] = len(products)
+            print(f'[RENAME] Starting: {len(products)} products', flush=True)
+
+            for p in products:
+                img = p.get('image', '')
+                if not img:
+                    continue
+                try:
+                    img_resp = _requests.get(img, timeout=10, headers={'Referer': 'https://www.google.com'})
+                    if img_resp.status_code != 200:
+                        _rename_progress['failed'] += 1; continue
+                    img_b64 = base64.b64encode(img_resp.content).decode('utf-8')
+
+                    for attempt in range(3):
+                        resp = _requests.post(
+                            f'https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent?key={GEMINI_KEY}',
+                            json={'contents': [{'parts': [
+                                {'text': PROMPT},
+                                {'inline_data': {'mime_type': 'image/jpeg', 'data': img_b64}}
+                            ]}]},
+                            timeout=30
+                        )
+                        result = resp.json()
+                        if 'candidates' in result:
+                            name = result['candidates'][0]['content']['parts'][0]['text'].strip().strip('".')
+                            name = _re.sub(r'[\u4e00-\u9fff]+', '', name).strip()
+                            if len(name) > 3 and len(name) < 80:
+                                update_product(p['id'], {'name': name})
+                                _rename_progress['last_name'] = name
+                            _rename_progress['done'] += 1
+                            break
+                        elif 'high demand' in str(result) or 'overloaded' in str(result):
+                            _rename_progress['demand_waits'] += 1
+                            _time.sleep(10 + attempt * 15)
+                            continue
+                        else:
+                            _rename_progress['failed'] += 1; break
+                except Exception as e:
+                    _rename_progress['failed'] += 1
+                    if _rename_progress['done'] < 5:
+                        print(f'[RENAME] Error: {str(e)[:80]}', flush=True)
+                _time.sleep(0.5)
+
+                processed = _rename_progress['done'] + _rename_progress['failed']
+                if processed % 100 == 0 and processed > 0:
+                    print(f'[RENAME] {processed}/{_rename_progress["total"]} | renamed: {_rename_progress["done"]} | failed: {_rename_progress["failed"]}', flush=True)
+
+            print(f'[RENAME] COMPLETE: {_rename_progress["done"]} renamed, {_rename_progress["failed"]} failed', flush=True)
+        except Exception as e:
+            print(f'[RENAME] CRASHED: {traceback.format_exc()}', flush=True)
+        finally:
+            _rename_progress['running'] = False
+
+    t = threading.Thread(target=run_rename, daemon=True)
+    t.start()
+    return jsonify({'ok': True, 'message': 'Started'})
+
+
+@app.route('/rename-progress')
+def rename_progress_public():
+    return jsonify(_rename_progress)
+
+
 @app.errorhandler(404)
 def not_found(e):
     return redirect(url_for('home'))
