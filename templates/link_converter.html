@@ -104,12 +104,12 @@ function convertLink() {
         document.getElementById('errorMsg').classList.add('active');
         return;
     }
-    var joyaUrl = 'https://joyabuy.com/product/?url=' + encodeURIComponent(extracted.product);
+    var joyaUrl = 'https://joyagoo.com/product/?url=' + encodeURIComponent(extracted.product);
     document.getElementById('resultFrom').innerHTML = extracted.agent === 'direct' ? 'Direct link' : 'Converted from <span>' + extracted.agent + '</span>';
     document.getElementById('resultLink').textContent = joyaUrl;
     document.getElementById('resultOpen').href = joyaUrl;
     document.getElementById('result').classList.add('active');
-    trackClick('tool', 'link_converter', '', '', 'convert_to_joyabuy');
+    trackClick('tool', 'link_converter', '', '', 'convert_to_joyagoo');
 }
 function copyResult() {
     var link = document.getElementById('resultLink').textContent;

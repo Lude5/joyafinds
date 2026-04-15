@@ -145,7 +145,7 @@ def affiliate_redirect(product_id):
     url = product.get('url', '')
     if url:
         from urllib.parse import quote
-        joya_url = f"https://joyabuy.com/product/?url={quote(url)}"
+        joya_url = f"https://joyagoo.com/product/?url={quote(url)}"
         if JOYABUY_AFFILIATE:
             joya_url += f"&affcode={JOYABUY_AFFILIATE}"
         return redirect(joya_url)
