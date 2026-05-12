@@ -16,6 +16,15 @@ ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'changeme123')
 
 ADMIN_API_TOKEN = os.environ.get('ADMIN_API_TOKEN', '')
 
+# Site identity used by the cross-site API (falls back if SITE_CONFIG missing)
+try:
+    SITE_CONFIG  # noqa: F821
+except NameError:
+    SITE_CONFIG = {
+        'name': os.environ.get('SITE_NAME', 'Site'),
+        'agent_name': os.environ.get('AGENT_NAME', 'KakoBuy'),
+    }
+
 
 def is_admin_api():
     """Either a logged-in admin session OR a valid X-Admin-Token header."""
