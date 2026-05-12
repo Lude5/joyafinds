@@ -13,6 +13,16 @@ app.secret_key = os.environ.get('SECRET_KEY', secrets.token_hex(32))
 CORS(app)
 
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'changeme123')
+
+ADMIN_API_TOKEN = os.environ.get('ADMIN_API_TOKEN', '')
+
+
+def is_admin_api():
+    """Either a logged-in admin session OR a valid X-Admin-Token header."""
+    if session.get('admin_logged_in', False):
+        return True
+    token = request.headers.get('X-Admin-Token') or request.args.get('token')
+    return bool(ADMIN_API_TOKEN and token and token == ADMIN_API_TOKEN)
 JOYABUY_AFFILIATE = os.environ.get('JOYABUY_AFFILIATE_CODE', '')
 DATA_DIR = '/data' if os.path.exists('/data') else 'data'
 
@@ -452,6 +462,100 @@ def rename_progress_public():
 @app.errorhandler(404)
 def not_found(e):
     return redirect(url_for('home'))
+
+
+
+
+
+# ===========================================================================
+# Cross-site API (used by the master admin) — token-auth alternative.
+# ===========================================================================
+
+@app.route('/admin/api/ping')
+def api_ping():
+    return jsonify({
+        'ok': True,
+        'site': SITE_CONFIG.get('name'),
+        'agent': SITE_CONFIG.get('agent_name'),
+        'token_required': bool(ADMIN_API_TOKEN),
+        'token_valid': is_admin_api(),
+    })
+
+
+@app.route('/admin/api/stats')
+def api_stats():
+    if not is_admin_api():
+        return jsonify({'error': 'Unauthorized'}), 401
+    from datetime import datetime, timedelta
+    days = request.args.get('days', 30, type=int)
+    stats = get_analytics(days=days)
+    products = get_products()
+    return jsonify({
+        'site': SITE_CONFIG.get('name'),
+        'agent': SITE_CONFIG.get('agent_name'),
+        'total_products': len(products),
+        'featured_count': sum(1 for p in products if p.get('featured')),
+        'categories': len(get_categories()),
+        'total_clicks': stats.get('total_clicks', 0),
+        'unique_visitors': stats.get('unique_visitors', 0),
+        'signup_clicks': stats.get('signup_clicks', 0),
+        'top_products': stats.get('top_products', []),
+        'top_categories': stats.get('top_categories', []),
+        'daily': stats.get('daily', []),
+        'days': days,
+        'since': (datetime.now() - timedelta(days=days)).isoformat(),
+    })
+
+
+@app.route('/admin/api/products', methods=['GET'])
+def api_admin_products():
+    if not is_admin_api():
+        return jsonify({'error': 'Unauthorized'}), 401
+    return jsonify({
+        'site': SITE_CONFIG.get('name'),
+        'products': get_products(),
+    })
+
+
+@app.route('/admin/api/products', methods=['POST'])
+def api_admin_add_product():
+    if not is_admin_api():
+        return jsonify({'error': 'Unauthorized'}), 401
+    data = request.get_json(silent=True) or {}
+    if not data.get('name'):
+        return jsonify({'error': 'Name required'}), 400
+    if not data.get('id'):
+        data['id'] = f"p{secrets.token_hex(4)}"
+    add_product(data)
+    return jsonify({'ok': True, 'id': data['id']})
+
+
+@app.route('/admin/api/products/<pid>', methods=['PUT', 'PATCH'])
+def api_admin_update_product(pid):
+    if not is_admin_api():
+        return jsonify({'error': 'Unauthorized'}), 401
+    data = request.get_json(silent=True) or {}
+    if 'price' in data:
+        try: data['price_numeric'] = float(data['price'] or 0)
+        except (ValueError, TypeError): data['price_numeric'] = 0
+    update_product(pid, data)
+    return jsonify({'ok': True})
+
+
+@app.route('/admin/api/products/<pid>', methods=['DELETE'])
+def api_admin_delete_product(pid):
+    if not is_admin_api():
+        return jsonify({'error': 'Unauthorized'}), 401
+    delete_product(pid)
+    return jsonify({'ok': True})
+
+
+@app.route('/admin/api/config')
+def api_admin_config():
+    if not is_admin_api():
+        return jsonify({'error': 'Unauthorized'}), 401
+    safe = {k: v for k, v in SITE_CONFIG.items() if 'token' not in k.lower() and 'secret' not in k.lower()}
+    return jsonify(safe)
 
 
 if __name__ == '__main__':
