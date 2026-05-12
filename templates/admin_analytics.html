@@ -162,5 +162,17 @@
             </table>
         </div>
     </div>
+
+<!-- Admin language toggle (added by master admin) -->
+<style>
+.adm-lang-fab { position: fixed; bottom: 18px; right: 18px; z-index: 999; display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; background: rgba(20,20,22,0.95); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: rgba(255,255,255,0.9); font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.4); backdrop-filter: blur(8px); user-select: none; }
+.adm-lang-fab:hover { background: rgba(6,182,212,0.15); border-color: rgba(6,182,212,0.5); color: rgb(6,182,212); }
+.adm-lang-fab .arrow { opacity: 0.5; font-size: 11px; }
+</style>
+<button type="button" class="adm-lang-fab" onclick="toggleAdminLang()" title="Switch language" aria-label="Switch language">
+    <span data-lang-label>EN</span><span class="arrow">&#8646;</span><span data-lang-other>中文</span>
+</button>
+<script src="/static/js/admin_i18n.js"></script>
+
 </body>
 </html>
