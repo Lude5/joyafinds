@@ -37,8 +37,10 @@ def _client_ip():
 def harden(app, login_paths=_DEFAULT_LOGIN_PATHS, max_attempts=_DEFAULT_MAX):
     """Apply cookie hardening, security headers, and login throttling to ``app``."""
     in_prod = bool(os.environ.get('RENDER') or os.environ.get('FLASK_SECURE_COOKIES'))
-    app.config.setdefault('SESSION_COOKIE_HTTPONLY', True)
-    app.config.setdefault('SESSION_COOKIE_SAMESITE', 'Lax')
+    # Direct assignment, not setdefault: Flask pre-seeds these keys (SameSite=None,
+    # HttpOnly=True), so setdefault('SESSION_COOKIE_SAMESITE','Lax') would be a no-op.
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
     app.config['SESSION_COOKIE_SECURE'] = in_prod
 
     norm_paths = tuple(p.rstrip('/') for p in login_paths)
