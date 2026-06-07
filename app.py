@@ -9,6 +9,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
+
+# --- security hardening (cookies, headers, login throttle) — see security.py ---
+try:
+    from security import harden as _harden
+    _harden(app)
+except Exception:
+    pass
 app.secret_key = os.environ.get('SECRET_KEY', secrets.token_hex(32))
 CORS(app)
 
@@ -569,4 +576,4 @@ def api_admin_config():
 
 if __name__ == '__main__':
     os.makedirs(DATA_DIR, exist_ok=True)
-    app.run(debug=True, port=5002)
+    app.run(debug=False, port=5002)
